@@ -3,8 +3,8 @@
 
 - Creat an account on github.com
 - Search for user *4it2017* and click follow and star
-- Fork a repo to your account
-- Clone the forked repo to yout local machine
+- Add your account as collaborator for the repos
+- Clone & you are ready to work
 
 # Resources #
 
