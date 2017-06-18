@@ -12,6 +12,8 @@
  - Flash the firmware [here](https://nodemcu.readthedocs.io/en/master/en/flash/)
  - Upload code to the device [here](https://nodemcu.readthedocs.io/en/master/en/upload/)
  
+## LUA language ##
+ - Language tutorial [here](https://www.lua.org/pil/contents.html)
 
 ## Wemos d1 mini esp8266 board ##
 
