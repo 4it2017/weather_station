@@ -24,7 +24,7 @@
  - Datasheet [here](https://www.sparkfun.com/datasheets/Sensors/Temperature/DHT22.pdf)
  - Nodemcu module for using the sersor [here](https://nodemcu.readthedocs.io/en/master/en/modules/dht/)
  
- ## BMP 280 pressure sensor##
+ ## BMP 280 pressure sensor ##
 
  - Manufacturer homepage [here](https://www.bosch-sensortec.com/bst/products/all_products/bmp280)
  - Datasheet [here](https://ae-bst.resource.bosch.com/media/_tech/media/datasheets/BST-BMP280-DS001-18.pdf)
