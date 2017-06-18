@@ -9,7 +9,7 @@
 
 - Wemos homepage (manufacturer) [here](https://www.wemos.cc/)
 - Di mini info [here](https://wiki.wemos.cc/products:d1:d1_mini)
-- Pins layout
+- Pins layout [here](https://github.com/4it2017/weather_station/blob/master/docs/d1-mini-esp8266-board.jpg)
 
 ## DHT22 temerature and humidity sensor ## 
 
