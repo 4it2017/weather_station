@@ -5,6 +5,14 @@
 - Homepage [here](https://eclipse.org/paho/clients/android/)
 - Blog post on how to use it [here](http://www.hivemq.com/blog/mqtt-client-library-enyclopedia-paho-android-service)
 
+## Programming esp8266 with nodemcu firmware ##
+
+ - Getting started [here](https://nodemcu.readthedocs.io/en/master/en/)
+ - Build the firmware [here](https://nodemcu.readthedocs.io/en/master/en/build/)
+ - Flash the firmware [here](https://nodemcu.readthedocs.io/en/master/en/flash/)
+ - Upload code to the device [here](https://nodemcu.readthedocs.io/en/master/en/upload/)
+ 
+
 ## Wemos d1 mini esp8266 board ##
 
 - Wemos homepage (manufacturer) [here](https://www.wemos.cc/)
