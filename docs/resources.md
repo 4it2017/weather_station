@@ -31,7 +31,7 @@
 
  - Manufacturer homepage [here](https://www.bosch-sensortec.com/bst/products/all_products/bmp280)
  - Datasheet [here](https://ae-bst.resource.bosch.com/media/_tech/media/datasheets/BST-BMP280-DS001-18.pdf)
- - Nodemcu module for using the device [here](https://nodemcu.readthedocs.io/en/master/en/modules/bme280/)
+ - Nodemcu module for using the sensor [here](https://nodemcu.readthedocs.io/en/master/en/modules/bme280/)
  
   ## I2C Interface ##
   
