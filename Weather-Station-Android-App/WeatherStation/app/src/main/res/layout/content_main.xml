@@ -14,7 +14,7 @@
         android:layout_height="100dp"
         android:layout_centerInParent="true"
         android:layout_alignParentTop="true"
-        android:contentDescription="sunny"
+        android:contentDescription="Sunny"
         android:src="@drawable/ic_015_sun" />
 
     <RelativeLayout
