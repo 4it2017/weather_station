@@ -9,20 +9,33 @@
     tools:showIn="@layout/app_bar_main">
 
     <ImageView
-        android:id="@+id/weather_image_description"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_centerInParent="true"
         android:layout_alignParentTop="true"
+        android:id="@+id/weather_image_description"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:padding="16dp"
+        android:layout_centerInParent="true"
         android:contentDescription="Sunny"
         android:src="@drawable/ic_015_sun" />
+
+    <DigitalClock
+        android:layout_below="@id/weather_image_description"
+        android:id="@+id/clock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textSize="70sp"
+        android:padding="16dp"
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold"
+        android:textColor="#000000"/>
 
     <RelativeLayout
         android:id="@+id/comfort_level_relative_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        android:layout_below="@id/weather_image_description">
+        android:layout_below="@id/clock">
 
         <TextView
             android:id="@+id/comfort_level_text_unimportant"
@@ -131,6 +144,4 @@
                 android:src="@drawable/ic_040_celsius" />
         </RelativeLayout>
     </RelativeLayout>
-
-
 </RelativeLayout>
