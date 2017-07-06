@@ -7,6 +7,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- Permissions required to receive BOOT_COMPLETED event -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <!--Permissions-->
 
     <application
@@ -26,9 +29,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!-- BroadcastReceiver that starts MqttConnectionManagerService on device boot -->
+        <receiver android:name=".MqttServiceStartReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
         <service
             android:name="org.eclipse.paho.android.service.MqttService" >
         </service>
+        <service android:name=".MqttConnectionManagerService" />
     </application>
 
 </manifest>
