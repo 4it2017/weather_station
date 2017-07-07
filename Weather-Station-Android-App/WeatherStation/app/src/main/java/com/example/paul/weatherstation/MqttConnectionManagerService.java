@@ -20,6 +20,8 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import java.io.UnsupportedEncodingException;
+
 import static android.R.id.message;
 
 /**
@@ -31,6 +33,7 @@ public class MqttConnectionManagerService extends Service{
     private MqttAndroidClient client;
     private MqttConnectOptions options;
     private static Activity activity;
+
     protected void initialize(Activity activity){
         MqttConnectionManagerService.activity = activity;
     }
@@ -51,9 +54,8 @@ public class MqttConnectionManagerService extends Service{
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        this.connect(client, options);
-        Bundle bundle = intent.getExtras();
-
+        boolean needRefresh =(boolean) intent.getExtras().get("NEED_REFRESH");
+        this.connect(client, options, needRefresh);
         return START_STICKY;
     }
 
@@ -66,11 +68,10 @@ public class MqttConnectionManagerService extends Service{
 
     private MqttAndroidClient createMqttAndroidClient() {
         String clientId = MqttClient.generateClientId();
-        MqttAndroidClient client = new MqttAndroidClient(getApplicationContext(), "tcp://m20.cloudmqtt.com:16691",clientId);
-        return client;
+        return new MqttAndroidClient(getApplicationContext(), "tcp://m20.cloudmqtt.com:16691",clientId);
     }
 
-    public void connect(final MqttAndroidClient client, MqttConnectOptions options) {
+    public void connect(final MqttAndroidClient client, MqttConnectOptions options, final boolean needRefresh) {
 
         try {
             if (!client.isConnected()) {
@@ -80,28 +81,29 @@ public class MqttConnectionManagerService extends Service{
                     @Override
                     public void onSuccess(IMqttToken asyncActionToken) {
                         Toast.makeText(getApplicationContext(), "Connected successfully", Toast.LENGTH_SHORT).show();
-                        int qos = 1;
-                        try {
-                            IMqttToken subToken = client.subscribe("nodemcu/#", qos);
-                            subToken.setActionCallback(new IMqttActionListener() {
-                                @Override
-                                public void onSuccess(IMqttToken asyncActionToken) {
-                                    Toast.makeText(getApplicationContext(), "Subscribed successfully", Toast.LENGTH_SHORT).show();
-                                }
 
-                                @Override
-                                public void onFailure(IMqttToken asyncActionToken,
-                                                      Throwable exception) {
-                                    // The subscription could not be performed, maybe the user was not
-                                    // authorized to subscribe on the specified topic e.g. using wildcards
-                                    Toast.makeText(getApplicationContext(), "Subscribed failed", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        } catch (MqttException e) {
-                            e.printStackTrace();
+                            //Subscribes
+                            int qos = 1;
+                            try {
+                                IMqttToken subToken = client.subscribe("nodemcu/#", qos);
+                                subToken.setActionCallback(new IMqttActionListener() {
+                                    @Override
+                                    public void onSuccess(IMqttToken asyncActionToken) {
+                                        Toast.makeText(getApplicationContext(), "Subscribed successfully", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    @Override
+                                    public void onFailure(IMqttToken asyncActionToken,
+                                                          Throwable exception) {
+                                        // The subscription could not be performed, maybe the user was not
+                                        // authorized to subscribe on the specified topic e.g. using wildcards
+                                        Toast.makeText(getApplicationContext(), "Subscribed failed", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            } catch (MqttException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
-
                     @Override
                     public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                         // Something went wrong e.g. connection timeout or firewall problems
@@ -139,7 +141,20 @@ public class MqttConnectionManagerService extends Service{
                 });
             }
         } catch (MqttException e) {
-            //handle e
+            e.printStackTrace();
+        }
+        if(needRefresh) {
+            String topic = "nodemcu/requests";
+            String payload = "NEED REFRESH!";
+            byte[] encodedPayload;
+            encodedPayload = payload.getBytes();
+            MqttMessage message = new MqttMessage(encodedPayload);
+            try {
+                client.publish(topic, message);
+            } catch (MqttException e) {
+                e.printStackTrace();
+            }
+            Toast.makeText(activity, "Publish successful", Toast.LENGTH_SHORT).show();
         }
     }
 }

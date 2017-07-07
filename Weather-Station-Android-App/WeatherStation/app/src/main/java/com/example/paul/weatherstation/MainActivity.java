@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,6 +68,15 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //Refresh Button
+        Button button = (Button) findViewById(R.id.refresh_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.this.useMqtt(true);
+            }
+        });
 
     }
 
@@ -127,13 +137,18 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+
     }
 
     @Override
     protected void onResume() {
-        Toast.makeText(this, "The Main Activity Summoned Me!", Toast.LENGTH_SHORT).show();
-
-        startService(new Intent(this, this.mqttConnectionManagerService.getClass()));
+        this.useMqtt(false);
         super.onResume();
+    }
+
+    private void useMqtt(boolean needRefresh){
+        Intent intent = new Intent(this, this.mqttConnectionManagerService.getClass());
+        intent.putExtra("NEED_REFRESH",needRefresh);
+        startService(intent);
     }
 }
