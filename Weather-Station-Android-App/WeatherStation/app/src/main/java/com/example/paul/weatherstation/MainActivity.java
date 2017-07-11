@@ -1,13 +1,9 @@
 package com.example.paul.weatherstation;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -16,31 +12,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.ramotion.foldingcell.FoldingCell;
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-import org.eclipse.paho.android.service.MqttAndroidClient;
-import org.eclipse.paho.client.mqttv3.IMqttActionListener;
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.IMqttToken;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.w3c.dom.Text;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private MqttConnectionManagerService mqttConnectionManagerService = new MqttConnectionManagerService();
 
-import java.io.Serializable;
-
-import static android.R.id.message;
-
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
-
-    public MqttConnectionManagerService mqttConnectionManagerService = new MqttConnectionManagerService();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,15 +29,6 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -69,12 +38,16 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //Refresh Button
-        Button button = (Button) findViewById(R.id.refresh_button);
-        button.setOnClickListener(new View.OnClickListener() {
+        //Refresh Action
+
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe);
+        swipeRefreshLayout.setColorSchemeColors(
+                Color.RED, Color.GREEN, Color.BLUE, Color.CYAN);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onClick(View v) {
+            public void onRefresh() {
                 MainActivity.this.useMqtt(true);
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
 
@@ -141,7 +114,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onResume() {
+    protected void onResume(){
         this.useMqtt(false);
         super.onResume();
     }
@@ -150,5 +123,15 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(this, this.mqttConnectionManagerService.getClass());
         intent.putExtra("NEED_REFRESH",needRefresh);
         startService(intent);
+    }
+
+    public void refreshTemperatureView(String s){
+        TextView temperatureText = (TextView) findViewById(R.id.temperature_value_text);
+        temperatureText.setText(s);
+    }
+
+    public void refreshHumidityView(String s){
+        TextView humidityText = (TextView) findViewById(R.id.humidity_level_text);
+        humidityText.setText(s);
     }
 }

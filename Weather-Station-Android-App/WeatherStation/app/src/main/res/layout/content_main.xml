@@ -1,158 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.v4.widget.SwipeRefreshLayout
+    android:id="@+id/swipe"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:showIn="@layout/app_bar_main"
     tools:context="com.example.paul.weatherstation.MainActivity"
-    tools:showIn="@layout/app_bar_main">
-<RelativeLayout
-    android:layout_width="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:layout_alignParentTop="true"
-        android:id="@+id/weather_image_description"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:padding="16dp"
-        android:layout_centerInParent="true"
-        android:contentDescription="Sunny"
-        android:src="@drawable/ic_015_sun" />
-
-    <DigitalClock
-        android:layout_below="@id/weather_image_description"
-        android:id="@+id/clock"
+    <ScrollView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:textSize="70sp"
-        android:padding="16dp"
-        android:layout_centerHorizontal="true"
-        android:textStyle="bold"
-        android:textColor="#000000"/>
-
-    <RelativeLayout
-        android:id="@+id/comfort_level_relative_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:layout_below="@id/clock">
-
-        <TextView
-            android:id="@+id/comfort_level_text_unimportant"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Comfort level:           "
-            android:textStyle="bold"
-            android:textColor="#000000"
-            android:textSize="25sp"/>
-
-        <ImageView
-            android:id="@+id/comfort_level_image_description"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_toRightOf="@id/comfort_level_text_unimportant"
-            android:src="@drawable/ic_emoticon_square_smile" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/humidity_relative_layout"
-        android:padding="16dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/comfort_level_relative_layout">
-
-        <TextView
-            android:id="@+id/humidity_text_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textColor="#000000"
-            android:layout_centerHorizontal="true"
-            android:textSize="15sp"
-            android:text="HUMIDITY"/>
-
-        <ImageView
-            android:id="@+id/humidity_image_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_drop"
-            android:layout_below="@id/humidity_text_description"/>
-        <TextView
-            android:id="@+id/humidity_level_text"
-            android:layout_below="@id/humidity_text_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/humidity_image_description"
-            android:text="50"
-            android:textColor="#000000"
-            android:textStyle="bold"
-            android:textSize="50sp"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/humidity_level_text"
-            android:text="%"
-            android:textColor="#000000"
-            android:textSize="30sp"
-            android:layout_alignTop="@id/humidity_level_text"/>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/temperature_relative_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:padding="16dp"
-        android:layout_below="@id/comfort_level_relative_layout">
-
-        <TextView
-            android:id="@+id/temperature_text_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textColor="#000000"
-            android:textSize="15sp"
-            android:text="TEMPERATURE"/>
+        android:layout_height="wrap_content">
 
         <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_below="@id/temperature_text_description">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/temperature_icon_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_012_thermometer_2" />
+                android:id="@+id/weather_image_description"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_width="250dp"
+                android:layout_height="150dp"
+                android:padding="16dp"
+                android:contentDescription="Sunny"
+                app:srcCompat="@drawable/ic_015_sun" />
 
-            <TextView
-                android:id="@+id/temperature_value_text"
+            <DigitalClock
+                android:id="@+id/clock"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/weather_image_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/temperature_icon_description"
-                android:text="22"
-                android:textSize="50sp"
+                android:textSize="70sp"
+                android:padding="16dp"
                 android:textStyle="bold"
                 android:textColor="#000000"/>
 
-            <ImageView
+            <RelativeLayout
+                android:id="@+id/comfort_level_relative_layout"
+                android:layout_below="@id/clock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/comfort_level_text_unimportant"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Comfort level:      "
+                    android:textStyle="bold"
+                    android:textColor="#000000"
+                    android:textSize="25sp"/>
+
+                <ImageView
+                    android:id="@+id/comfort_level_image_description"
+                    android:layout_toRightOf="@id/comfort_level_text_unimportant"
+                    android:layout_toEndOf="@id/comfort_level_text_unimportant"
+                    android:contentDescription="Comfort Level Image"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    app:srcCompat="@drawable/ic_emoticon_square_smile" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/humidity_relative_layout"
+                android:layout_below="@id/comfort_level_relative_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/temperature_value_text"
-                android:layout_alignTop="@id/temperature_value_text"
-                android:src="@drawable/ic_040_celsius" />
-        </RelativeLayout>
-    </RelativeLayout>
+                android:padding="16dp">
 
-    <Button
-        android:id="@+id/refresh_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/humidity_relative_layout"
-        android:text="refresh"/>
-</RelativeLayout>
-</ScrollView>
+                <TextView
+                    android:id="@+id/humidity_text_description"
+                    android:layout_centerHorizontal="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textColor="#000000"
+                    android:textSize="15sp"
+                    android:text="HUMIDITY"/>
+
+                <ImageView
+                    android:id="@+id/humidity_image_description"
+                    android:layout_below="@id/humidity_text_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_drop"
+                    android:contentDescription="Drop Image"/>
+
+                <TextView
+                    android:id="@+id/humidity_level_text"
+                    android:layout_below="@id/humidity_text_description"
+                    android:layout_toRightOf="@id/humidity_image_description"
+                    android:layout_toEndOf="@id/humidity_image_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="50"
+                    android:textColor="#000000"
+                    android:textStyle="bold"
+                    android:textSize="50sp"/>
+
+                <TextView
+                    android:layout_toRightOf="@id/humidity_level_text"
+                    android:layout_toEndOf="@id/humidity_level_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="%"
+                    android:textColor="#000000"
+                    android:textSize="30sp"
+                    android:layout_alignTop="@id/humidity_level_text"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/temperature_relative_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:padding="16dp"
+                android:layout_below="@id/comfort_level_relative_layout">
+
+                <TextView
+                    android:id="@+id/temperature_text_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textColor="#000000"
+                    android:textSize="15sp"
+                    android:text="TEMPERATURE"/>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_below="@id/temperature_text_description">
+
+                    <ImageView
+                        android:id="@+id/temperature_icon_description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_012_thermometer_2" />
+
+                    <TextView
+                        android:id="@+id/temperature_value_text"
+                        android:layout_toRightOf="@id/temperature_icon_description"
+                        android:layout_toEndOf="@id/temperature_icon_description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="22"
+                        android:textSize="50sp"
+                        android:textStyle="bold"
+                        android:textColor="#000000"/>
+
+                    <ImageView
+                        android:layout_toRightOf="@id/temperature_value_text"
+                        android:layout_toEndOf="@id/temperature_value_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@id/temperature_value_text"
+                        app:srcCompat="@drawable/ic_040_celsius"
+                        android:contentDescription="Celsius Image"/>
+                </RelativeLayout>
+            </RelativeLayout>
+        </RelativeLayout>
+    </ScrollView>
+</android.support.v4.widget.SwipeRefreshLayout>

@@ -1,13 +1,9 @@
 package com.example.paul.weatherstation;
 
-import android.app.Activity;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
@@ -20,9 +16,6 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
-import java.io.UnsupportedEncodingException;
-
-import static android.R.id.message;
 
 /**
  * Created by Paul on 05-Jul-17.
@@ -32,9 +25,12 @@ public class MqttConnectionManagerService extends Service{
 
     private MqttAndroidClient client;
     private MqttConnectOptions options;
-    private static Activity activity;
+    private String refreshTopic = "nodemcu/requests";
+    private String temperatureTopic = "nodemcu/temperature";
+    private String humidityTopic = "nodemcu/humidity";
+    private static MainActivity activity;
 
-    protected void initialize(Activity activity){
+    public void initialize(MainActivity activity){
         MqttConnectionManagerService.activity = activity;
     }
 
@@ -71,17 +67,17 @@ public class MqttConnectionManagerService extends Service{
         return new MqttAndroidClient(getApplicationContext(), "tcp://m20.cloudmqtt.com:16691",clientId);
     }
 
-    public void connect(final MqttAndroidClient client, MqttConnectOptions options, final boolean needRefresh) {
-
+    private void connect(final MqttAndroidClient client, MqttConnectOptions options, final boolean needRefresh)
+    {
         try {
-            if (!client.isConnected()) {
+            if (!client.isConnected())
+            {
                 IMqttToken token = client.connect(options);
                 //on successful connection, publish or subscribe as usual
                 token.setActionCallback(new IMqttActionListener() {
                     @Override
                     public void onSuccess(IMqttToken asyncActionToken) {
                         Toast.makeText(getApplicationContext(), "Connected successfully", Toast.LENGTH_SHORT).show();
-
                             //Subscribes
                             int qos = 1;
                             try {
@@ -93,8 +89,7 @@ public class MqttConnectionManagerService extends Service{
                                     }
 
                                     @Override
-                                    public void onFailure(IMqttToken asyncActionToken,
-                                                          Throwable exception) {
+                                    public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                                         // The subscription could not be performed, maybe the user was not
                                         // authorized to subscribe on the specified topic e.g. using wildcards
                                         Toast.makeText(getApplicationContext(), "Subscribed failed", Toast.LENGTH_SHORT).show();
@@ -118,19 +113,14 @@ public class MqttConnectionManagerService extends Service{
 
                     @Override
                     public void messageArrived(String topic, MqttMessage message) throws Exception {
-                        if(topic.equals("nodemcu/temperature")){
-                            byte[] bytes = message.getPayload();
-                            String s = new String(bytes);
+
+                        if(topic.equals(MqttConnectionManagerService.this.temperatureTopic)){
                             Toast.makeText(MqttConnectionManagerService.this, "Recieved new temperature", Toast.LENGTH_SHORT).show();
-                            TextView temperatureText = (TextView) MqttConnectionManagerService.activity.findViewById(R.id.temperature_value_text);
-                            temperatureText.setText(s);
+                            activity.refreshTemperatureView(getMessageText(message));
                         }
-                        else if(topic.equals("nodemcu/humidity")){
-                            byte[] bytes = message.getPayload();
-                            String s = new String(bytes);
-                            Toast.makeText(MqttConnectionManagerService.this, "Recieved new temperature", Toast.LENGTH_SHORT).show();
-                            TextView humidityText = (TextView) MqttConnectionManagerService.activity.findViewById(R.id.humidity_level_text);
-                            humidityText.setText(s);
+                        else if(topic.equals(MqttConnectionManagerService.this.humidityTopic)){
+                            Toast.makeText(MqttConnectionManagerService.this, "Recieved new humidity", Toast.LENGTH_SHORT).show();
+                            activity.refreshHumidityView(getMessageText(message));
                         }
                     }
 
@@ -144,17 +134,23 @@ public class MqttConnectionManagerService extends Service{
             e.printStackTrace();
         }
         if(needRefresh) {
-            String topic = "nodemcu/requests";
-            String payload = "NEED REFRESH!";
-            byte[] encodedPayload;
-            encodedPayload = payload.getBytes();
-            MqttMessage message = new MqttMessage(encodedPayload);
             try {
-                client.publish(topic, message);
+                client.publish(this.refreshTopic, this.getRefreshMessage());
             } catch (MqttException e) {
                 e.printStackTrace();
             }
-            Toast.makeText(activity, "Publish successful", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Publish successful", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private String getMessageText(MqttMessage mqttMessage){
+        return new String(mqttMessage.getPayload());
+    }
+
+    private MqttMessage getRefreshMessage(){
+        String payload = "NEED REFRESH!";
+        byte[] encodedPayload;
+        encodedPayload = payload.getBytes();
+        return new MqttMessage(encodedPayload);
     }
 }
