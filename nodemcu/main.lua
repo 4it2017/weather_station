@@ -27,10 +27,21 @@ function mqttConnect()
     
     mqtt:connect("m20.cloudmqtt.com", 16691, 0, function(conn) 
      print("connected")
-     mqtt:publish("nodemcu/1","my_message",0,0, function(conn) 
-       print("sent") 
+     temp, humi = readSensors()
+     mqtt:publish("nodemcu/temperature",temp,0,0, function(conn) 
+        print("sent temperature") 
+        mqtt:publish("nodemcu/humidity",humi,0,0, function(conn) 
+            print("sent humidity2") 
+            print("kaput")
+            node.dsleep(10000000)
+        end)  
      end)
+     
     end)
 end
 
-
+function readSensors()
+    pin = 3
+    status, temp, humi = dht.readxx(pin)
+    return temp, humi
+end
