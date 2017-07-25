@@ -1,3 +1,4 @@
+print("wake")
 dofile("settings.lua")
 
 wifi.setmode(wifi.STATION)
@@ -37,21 +38,27 @@ function mqttConnectAndSend()
     mqtt:on("offline", function(con) print ("mqtt offline") end) 
     
     mqtt:connect(MQTT_SERVER, MQTT_PORT, 0, function(conn) 
-     temp, humi = readSensors()
-     mqtt:publish("nodemcu/"..node.chipid().."/temperature",temp,0,0, function(conn) 
+    temp, humi, pressure = readSensors()
+    mqtt:publish("nodemcu/"..node.chipid().."/temperature",temp,0,0, function(conn) 
         print("sent temp "..temp) 
         mqtt:publish("nodemcu/"..node.chipid().."/humidity",humi,0,0, function(conn) 
-            print("sent humi "..humi) 
-            node.dsleep(OPT_SAMPLING)
+            print("sent humi "..humi)   
+            mqtt:publish("nodemcu/"..node.chipid().."/pressure",pressure,0,0, function(conn) 
+                print("sent pressure "..pressure) 
+                print("sleep")
+                node.dsleep(OPT_SAMPLING)
+            end)  
         end)  
-     end)
+    end)
      
     end)
 end
 
 function readSensors()
-    pin = 3
-    status, temp, humi = dht.readxx(pin)
-    return temp, humi
+    bme280.init(2,1)
+    bmeT, bmeP, bmeH, bmeQNH = bme280.read(LOC_ALTITUDE)
+    dhtStatus, dhtTemp, dhtHumi = dht.readxx(3)
+        
+    return dhtTemp, dhtHumi, bmeQNH/1000
 end
 
