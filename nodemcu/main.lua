@@ -1,39 +1,48 @@
-WIFI_NAME = "netmatch-guest"
-WIFI_PASS = "nmt2013gu3st"
+dofile("settings.lua")
 
 wifi.setmode(wifi.STATION)
 wifi.setphymode(wifi.PHYMODE_N)
-wifi.sta.config(WIFI_NAME,WIFI_PASS)
+
+wifi.sta.config(WIFI_SSID,WIFI_PASS)
 wifi.sta.connect()
+
+retries = 0
 
 mytimer = tmr.create()
 mytimer:register(1000, tmr.ALARM_AUTO, function()  verifConnect() end)
 mytimer:start()
 
 function verifConnect()
-    connected=wifi.sta.getip()~=nil 
-    print(connected)
-    if (connected) then 
-    tmr.unregister(mytimer)
-    mqttConnect()
+
+    connected = wifi.sta.getip() ~= nil 
+    timedOut = retries > 10
+
+    if(connected) then
+        print("wifi connected")
+        tmr.unregister(mytimer)       
+        mqttConnectAndSend()
     end
+    
+    if (timedOut) then 
+        tmr.unregister(mytimer)       
+        print("wifi timed out")
+    end
+    retries = retries + 1
 end
 
-function mqttConnect()
-    print("connect to mqtt") 
-    mqtt = mqtt.Client("nodemcu", 120, "idwlxdum", "ksflFfLEc1M6")
-    mqtt:on("connect", function(con) print ("connected") end)
-    mqtt:on("offline", function(con) print ("offline") end) 
+function mqttConnectAndSend()
+ 
+    mqtt = mqtt.Client(node.chipid(), 120, MQTT_USER, MQTT_PASS)
+    mqtt:on("connect", function(con) print ("mqtt connected") end)
+    mqtt:on("offline", function(con) print ("mqtt offline") end) 
     
-    mqtt:connect("m20.cloudmqtt.com", 16691, 0, function(conn) 
-     print("connected")
+    mqtt:connect(MQTT_SERVER, MQTT_PORT, 0, function(conn) 
      temp, humi = readSensors()
-     mqtt:publish("nodemcu/temperature",temp,0,0, function(conn) 
-        print("sent temperature") 
-        mqtt:publish("nodemcu/humidity",humi,0,0, function(conn) 
-            print("sent humidity2") 
-            print("kaput")
-            node.dsleep(10000000)
+     mqtt:publish("nodemcu/"..node.chipid().."/temperature",temp,0,0, function(conn) 
+        print("sent temp "..temp) 
+        mqtt:publish("nodemcu/"..node.chipid().."/humidity",humi,0,0, function(conn) 
+            print("sent humi "..humi) 
+            node.dsleep(OPT_SAMPLING)
         end)  
      end)
      
@@ -45,3 +54,4 @@ function readSensors()
     status, temp, humi = dht.readxx(pin)
     return temp, humi
 end
+
