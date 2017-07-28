@@ -27,6 +27,7 @@ function verifConnect()
     if (timedOut) then 
         tmr.unregister(mytimer)       
         print("wifi timed out")
+        node.dsleep(OPT_SAMPLING)
     end
     retries = retries + 1
 end
@@ -39,11 +40,11 @@ function mqttConnectAndSend()
     
     mqtt:connect(MQTT_SERVER, MQTT_PORT, 0, function(conn) 
     temp, humi, pressure = readSensors()
-    mqtt:publish("nodemcu/"..node.chipid().."/temperature",temp,0,0, function(conn) 
+    mqtt:publish("nodemcu/"..node.chipid().."/temperature", temp, 1, 0, function(conn) 
         print("sent temp "..temp) 
-        mqtt:publish("nodemcu/"..node.chipid().."/humidity",humi,0,0, function(conn) 
+        mqtt:publish("nodemcu/"..node.chipid().."/humidity", humi, 1, 0, function(conn) 
             print("sent humi "..humi)   
-            mqtt:publish("nodemcu/"..node.chipid().."/pressure",pressure,0,0, function(conn) 
+            mqtt:publish("nodemcu/"..node.chipid().."/pressure", pressure, 1, 0, function(conn) 
                 print("sent pressure "..pressure) 
                 print("sleep")
                 node.dsleep(OPT_SAMPLING)
