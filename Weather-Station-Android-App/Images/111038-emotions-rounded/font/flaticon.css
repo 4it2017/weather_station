@@ -1,0 +1,131 @@
+	/*
+  	Flaticon icon font: Flaticon
+  	Creation date: 22/06/2016 15:06
+  	*/
+
+@font-face {
+  font-family: "Flaticon";
+  src: url("./Flaticon.eot");
+  src: url("./Flaticon.eot?#iefix") format("embedded-opentype"),
+       url("./Flaticon.woff") format("woff"),
+       url("./Flaticon.ttf") format("truetype"),
+       url("./Flaticon.svg#Flaticon") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: "Flaticon";
+    src: url("./Flaticon.svg#Flaticon") format("svg");
+  }
+}
+
+[class^="flaticon-"]:before, [class*=" flaticon-"]:before,
+[class^="flaticon-"]:after, [class*=" flaticon-"]:after {   
+  font-family: Flaticon;
+        font-size: 20px;
+font-style: normal;
+margin-left: 20px;
+}
+
+.flaticon-anger-emoticon-square-face:before { content: "\f100"; }
+.flaticon-anger-on-emoticon-face-of-rounded-square-outline:before { content: "\f101"; }
+.flaticon-angry-emoticon-face:before { content: "\f102"; }
+.flaticon-angry-emoticon-face-with-opened-mouth-in-rounded-square-outline:before { content: "\f103"; }
+.flaticon-angry-emoticon-square-face:before { content: "\f104"; }
+.flaticon-angry-emoticon-square-face-1:before { content: "\f105"; }
+.flaticon-angry-emoticon-square-face-with-closed-eyes:before { content: "\f106"; }
+.flaticon-annulled-emoticon-square-face:before { content: "\f107"; }
+.flaticon-bad-emoticon-square-face:before { content: "\f108"; }
+.flaticon-black-eye-and-opened-mouth-emoticon-square-face:before { content: "\f109"; }
+.flaticon-crying-emoticon-rounded-square-face:before { content: "\f10a"; }
+.flaticon-disappointed-emoticon-face:before { content: "\f10b"; }
+.flaticon-disgusted-emoticon-square-face:before { content: "\f10c"; }
+.flaticon-doubt-on-emoticon-square-face:before { content: "\f10d"; }
+.flaticon-emoticon-criminal-face-with-eyes-mask:before { content: "\f10e"; }
+.flaticon-emoticon-face-of-doubt:before { content: "\f10f"; }
+.flaticon-emoticon-face-square-with-tongue-out-of-the-mouth-and-closed-eyes:before { content: "\f110"; }
+.flaticon-emoticon-face-with-the-mouth-at-one-side-like-a-small-smile-in-a-rounded-square:before { content: "\f111"; }
+.flaticon-emoticon-happy-smiling-square-face-shape:before { content: "\f112"; }
+.flaticon-emoticon-in-love-face-in-a-square:before { content: "\f113"; }
+.flaticon-emoticon-in-love-face-with-heart-shaped-eyes-in-square-outline:before { content: "\f114"; }
+.flaticon-emoticon-rounded-square-criminal-face-with-covered-eyes-with-a-mask:before { content: "\f115"; }
+.flaticon-emoticon-smiling-square-face:before { content: "\f116"; }
+.flaticon-emoticon-square-face-with-a-smile:before { content: "\f117"; }
+.flaticon-emoticon-square-face-with-closed-eyes-and-big-lips:before { content: "\f118"; }
+.flaticon-emoticon-square-face-with-closed-eyes-and-mouth-of-straight-lines:before { content: "\f119"; }
+.flaticon-emoticon-square-face-with-closed-eyes-and-straight-mouth-line:before { content: "\f11a"; }
+.flaticon-emoticon-square-face-with-closed-eyes-and-tongue-out:before { content: "\f11b"; }
+.flaticon-emoticon-square-face-with-curved-mouth-expression:before { content: "\f11c"; }
+.flaticon-emoticon-square-face-with-straight-mouth:before { content: "\f11d"; }
+.flaticon-emoticon-square-face-with-straight-mouth-and-eyes-lines:before { content: "\f11e"; }
+.flaticon-emoticon-square-face-with-tongue-out:before { content: "\f11f"; }
+.flaticon-emoticon-square-rounded-face-with-tongue-out-of-the-mouth:before { content: "\f120"; }
+.flaticon-emoticon-square-smile:before { content: "\f121"; }
+.flaticon-emoticon-square-smiling-face-with-closed-eyes:before { content: "\f122"; }
+.flaticon-emoticon-square-surprised-face-with-open-circular-mouth:before { content: "\f123"; }
+.flaticon-emoticons-face-with-straight-mouth-line-and-closed-eyes:before { content: "\f124"; }
+.flaticon-emoticons-square-face-with-closed-eyes-and-opened-mouth:before { content: "\f125"; }
+.flaticon-emoticons-square-face-with-sunglasses:before { content: "\f126"; }
+.flaticon-evil-smile-square-emoticon-face:before { content: "\f127"; }
+.flaticon-furious-emoticon-square-face:before { content: "\f128"; }
+.flaticon-happy-emoticon:before { content: "\f129"; }
+.flaticon-happy-emoticon-smiling-square:before { content: "\f12a"; }
+.flaticon-happy-emoticon-with-one-tooth:before { content: "\f12b"; }
+.flaticon-happy-smiling-emoticon-face-with-open-mouth:before { content: "\f12c"; }
+.flaticon-happy-smiling-emoticon-square-face:before { content: "\f12d"; }
+.flaticon-happy-smiling-emoticon-square-face-1:before { content: "\f12e"; }
+.flaticon-happy-smiling-emoticon-square-face-with-sunglasses:before { content: "\f12f"; }
+.flaticon-intellectual-emoticon-square-face:before { content: "\f130"; }
+.flaticon-male-square-face-with-glasses-and-mustache:before { content: "\f131"; }
+.flaticon-mute-emoticon-square-face:before { content: "\f132"; }
+.flaticon-mute-emoticon-square-face-1:before { content: "\f133"; }
+.flaticon-nerd-emoticon-square-face:before { content: "\f134"; }
+.flaticon-nerd-happy-smiling-face-in-rounded-square-face:before { content: "\f135"; }
+.flaticon-pirate-emoticon-face-with-one-covered-eye-in-square-outline:before { content: "\f136"; }
+.flaticon-resting-emoticon-square-face:before { content: "\f137"; }
+.flaticon-sad-emoticon-square-face:before { content: "\f138"; }
+.flaticon-sad-emoticon-square-face-with-closed-eyes:before { content: "\f139"; }
+.flaticon-sad-face-in-rounded-square:before { content: "\f13a"; }
+.flaticon-sad-rounded-square-emoticon:before { content: "\f13b"; }
+.flaticon-sad-sleepy-emoticon-face-square:before { content: "\f13c"; }
+.flaticon-sad-suffering-crying-emoticon-face:before { content: "\f13d"; }
+.flaticon-scared-emoticon-square-face:before { content: "\f13e"; }
+.flaticon-singing-emoticon-square-face:before { content: "\f13f"; }
+.flaticon-sleeping-face-with-opened-mouth-in-square-outline:before { content: "\f140"; }
+.flaticon-sleepy-emoticon-square-face:before { content: "\f141"; }
+.flaticon-sleepy-face-square-shape:before { content: "\f142"; }
+.flaticon-smiley-of-square-face-shape:before { content: "\f143"; }
+.flaticon-smiley-of-square-rounded-face:before { content: "\f144"; }
+.flaticon-smiley-square-face:before { content: "\f145"; }
+.flaticon-smiley-square-face-1:before { content: "\f146"; }
+.flaticon-smiley-square-face-with-broken-teeth:before { content: "\f147"; }
+.flaticon-smiley-with-closed-eyes-rounded-square-face:before { content: "\f148"; }
+.flaticon-smiley-with-tongue-in-a-square-shape:before { content: "\f149"; }
+.flaticon-smiling-emoticon-face-in-a-square:before { content: "\f14a"; }
+.flaticon-smiling-emoticon-square-face:before { content: "\f14b"; }
+.flaticon-smiling-emoticon-square-face-1:before { content: "\f14c"; }
+.flaticon-smiling-emoticon-square-face-with-closed-eyes:before { content: "\f14d"; }
+.flaticon-smiling-emoticon-with-raised-eyebrows-and-closed-eyes:before { content: "\f14e"; }
+.flaticon-smiling-happy-emoticon-face:before { content: "\f14f"; }
+.flaticon-smiling-happy-emoticon-square-face-with-eyes-like-stars:before { content: "\f150"; }
+.flaticon-smiling-square-face:before { content: "\f151"; }
+.flaticon-square-emoticon-angry-face:before { content: "\f152"; }
+.flaticon-student-smiling-emoticon-square-face:before { content: "\f153"; }
+.flaticon-surprised-emoticon-square-face:before { content: "\f154"; }
+.flaticon-surprised-emoticon-square-face-with-open-eyes-and-mouth:before { content: "\f155"; }
+.flaticon-surprised-rounded-square-face:before { content: "\f156"; }
+.flaticon-surprised-square-face-with-eyes-and-mouth-opened:before { content: "\f157"; }
+.flaticon-sweating-emoticon-square-face:before { content: "\f158"; }
+.flaticon-teardrop-falling-on-sad-emoticon-face:before { content: "\f159"; }
+.flaticon-tired-emoticon-face-with-open-mouth-and-closed-eyes:before { content: "\f15a"; }
+.flaticon-very-angry-emoticon-square-face:before { content: "\f15b"; }
+.flaticon-wink-emoticon-of-rounded-square-face:before { content: "\f15c"; }
+.flaticon-wink-face-square:before { content: "\f15d"; }
+.flaticon-winking-emoticon-smiling-face-with-tongue-out-of-the-mouth-in-square-rounded-outline-shape:before { content: "\f15e"; }
+.flaticon-winking-emoticon-with-tongue-out-of-mouth-and-square-face-shape:before { content: "\f15f"; }
+.flaticon-wound-cross-on-emoticon-sad-face-of-rounded-square-shape:before { content: "\f160"; }
+.flaticon-yawning-emoticon-face-in-rounded-square-with-open-oval-mouth-and-closed-small-eyes:before { content: "\f161"; }
+.flaticon-yawning-emoticon-square-face:before { content: "\f162"; }
+.flaticon-yawning-emoticon-square-face-1:before { content: "\f163"; }

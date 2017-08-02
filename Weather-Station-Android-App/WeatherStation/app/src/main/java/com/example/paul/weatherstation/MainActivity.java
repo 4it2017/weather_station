@@ -33,8 +33,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     MqttConnectOptions mqttConnectOptions;
     private final String serverUri = "tcp://m20.cloudmqtt.com:16691";
     private final String refreshTopic = "nodemcu/requests";
-    private final String temperatureTopic = "nodemcu/temperature";
-    private final String humidityTopic = "nodemcu/humidity";
+    private final String temperatureTopic = "nodemcu/16261926/temperature";
+    private final String humidityTopic = "nodemcu/16261926/humidity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         this.mqttConnectOptions = createMqttConnectOptions();
+        this.mqttConnectOptions.setCleanSession(false);
 
         try {
             mqttAndroidClient.connect(mqttConnectOptions, null, new IMqttActionListener() {
@@ -196,7 +197,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void subscribeToTopics(){
         try {
-            mqttAndroidClient.subscribe("nodemcu/#", 0, null, new IMqttActionListener() {
+            mqttAndroidClient.subscribe("nodemcu/#", 1, null, new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
 
