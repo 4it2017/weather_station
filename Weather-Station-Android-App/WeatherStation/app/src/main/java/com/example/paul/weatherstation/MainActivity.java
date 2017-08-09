@@ -1,8 +1,8 @@
 package com.example.paul.weatherstation;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.design.widget.NavigationView;
@@ -11,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -26,6 +27,10 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -33,8 +38,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     MqttConnectOptions mqttConnectOptions;
     private final String serverUri = "tcp://m20.cloudmqtt.com:16691";
     private final String refreshTopic = "nodemcu/requests";
-    private final String temperatureTopic = "nodemcu/16261926/temperature";
-    private final String humidityTopic = "nodemcu/16261926/humidity";
+    private final String temperatureTopic = "nodemcu/2916367/temperature";
+    private final String humidityTopic = "nodemcu/2916367/humidity";
+    private final String pressureTopic = "nodemcu/2916367/pressure";
+    private final WeatherRecord weatherRecord = new WeatherRecord();
+    private final DatabaseHandler db = new DatabaseHandler(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -52,6 +60,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //Set Last Values To Views
+
+        refreshTemperatureView(db.getLastWeatherRecord().getTemperature());
+        refreshHumidityView(db.getLastWeatherRecord().getHumidity());
 
         //Refresh Action
 
@@ -69,6 +82,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //mqtt
 
         this.mqttAndroidClient = this.createMqttAndroidClient();
+        this.mqttConnectOptions = createMqttConnectOptions();
+
         this.mqttAndroidClient.setCallback(new MqttCallback() {
             @Override
             public void connectionLost(Throwable cause) {
@@ -77,13 +92,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
-                if(topic.equals(temperatureTopic)){
-                    Toast.makeText(getApplicationContext(), "Recieved new temperature", Toast.LENGTH_SHORT).show();
-                    refreshTemperatureView(message.toString());
-                }
-                else if(topic.equals(humidityTopic)){
-                    Toast.makeText(getApplicationContext(), "Recieved new humidity", Toast.LENGTH_SHORT).show();
-                    refreshHumidityView(message.toString());
+                switch (topic) {
+                    case temperatureTopic:
+                        refreshTemperatureView(message.toString());
+                        weatherRecord.setTemperature(message.toString());
+                        addToDb();
+                        break;
+                    case humidityTopic:
+                        refreshHumidityView(message.toString());
+                        weatherRecord.setHumidity(message.toString());
+                        addToDb();
+                        break;
+                    case pressureTopic:
+                        weatherRecord.setPressure(message.toString());
+                        addToDb();
+                        break;
+                    default:
+                        break;
                 }
             }
 
@@ -93,19 +118,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-        this.mqttConnectOptions = createMqttConnectOptions();
-        this.mqttConnectOptions.setCleanSession(false);
-
         try {
             mqttAndroidClient.connect(mqttConnectOptions, null, new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
                     subscribeToTopics();
+                    Snackbar snackbar = Snackbar
+                            .make(drawer, "Connection Successful!", Snackbar.LENGTH_LONG);
+
+                    snackbar.show();
+
                 }
 
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                     Toast.makeText(MainActivity.this, "Something went wrong connecting to server.", Toast.LENGTH_SHORT).show();
+                    exception.printStackTrace();
                 }
             });
         } catch (MqttException e) {
@@ -149,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -185,6 +213,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private MqttConnectOptions createMqttConnectOptions() {
         MqttConnectOptions options = new MqttConnectOptions();
+//        options.setCleanSession(false);
         options.setUserName("android");
         options.setPassword("android".toCharArray());
         return options;
@@ -215,7 +244,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    public void publishRefreshMessage(){
+    private void publishRefreshMessage(){
 
         try {
             mqttAndroidClient.publish(refreshTopic, getRefreshMessage());
@@ -226,11 +255,45 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    public MqttMessage getRefreshMessage(){
+    private MqttMessage getRefreshMessage(){
         String payload = "NEED REFRESH!";
         byte[] encodedPayload;
         encodedPayload = payload.getBytes();
         return new MqttMessage(encodedPayload);
     }
 
+    private boolean isWeatherRecordLoaded(WeatherRecord weatherRecord){
+        return weatherRecord.getPressure() != null
+                && weatherRecord.getHumidity() != null
+                && weatherRecord.getTemperature() != null;
+    }
+
+    private String getCurrentTime(){
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy | HH:mm:ss");
+        return sdf.format(c.getTime());
+    }
+
+    private void addToDb(){
+        if(isWeatherRecordLoaded(weatherRecord)){
+            Log.d("Insert: ", "Inserting ..");
+            weatherRecord.setTime(getCurrentTime());
+            db.addWeatherRecord(weatherRecord);
+            weatherRecord.clear();
+            addWeatherRecordsToLog();
+        }
+    }
+
+    private void addWeatherRecordsToLog(){
+        //Adding weatherRecords to Log
+        Log.d("Reading: ", "Reading all contacts..");
+        List<WeatherRecord> weatherRecordList = db.getAllWeatherRecords();
+
+        for (WeatherRecord weatherRecord : weatherRecordList) {
+            String log = "Id: " + weatherRecord.getID() + " ,Time: " + weatherRecord.getTime() + " ,Temperature: " + weatherRecord.getTemperature() + " ,Humidity:" + weatherRecord.getHumidity() + " ,Pressure:" + weatherRecord.getPressure();
+            // Writing Contacts to log
+            Log.d("Name: ", log);
+            System.out.println("Name: " + log);
+        }
+    }
 }

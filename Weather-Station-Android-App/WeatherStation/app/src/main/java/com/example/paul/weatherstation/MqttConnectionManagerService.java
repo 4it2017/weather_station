@@ -7,6 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
@@ -19,6 +20,8 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 
 /**
@@ -29,7 +32,11 @@ public class MqttConnectionManagerService extends Service{
 
     private MqttAndroidClient client;
     private MqttConnectOptions options;
-
+    private final DatabaseHandler db = new DatabaseHandler(this);
+    private final String temperatureTopic = "nodemcu/2916367/temperature";
+    private final String humidityTopic = "nodemcu/2916367/humidity";
+    private final String pressureTopic = "nodemcu/2916367/pressure";
+    private final WeatherRecord weatherRecord = new WeatherRecord();
 
     @Nullable
     @Override
@@ -106,8 +113,29 @@ public class MqttConnectionManagerService extends Service{
 
                     @Override
                     public void messageArrived(String topic, MqttMessage message) throws Exception {
+                        Log.d("Insert: ", "Inserting ..");
+                        Calendar c = Calendar.getInstance();
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy | HH:mm:ss");
+                        String strDate = sdf.format(c.getTime());
 
-
+                        switch (topic) {
+                            case temperatureTopic:
+                                weatherRecord.setTemperature(message.toString());
+                                addToDb();
+                                break;
+                            case humidityTopic:
+                                weatherRecord.setHumidity(message.toString());
+                                addToDb();
+                                break;
+                            case pressureTopic:
+                                weatherRecord.setPressure(message.toString());
+                                addToDb();
+                                break;
+                            default:
+                                break;
+                        }
+                        weatherRecord.setTime(strDate);
+                        db.addWeatherRecord(weatherRecord);
                     }
 
                     @Override
@@ -127,5 +155,26 @@ public class MqttConnectionManagerService extends Service{
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
+    private boolean isWeatherRecordLoaded(WeatherRecord weatherRecord){
+        return weatherRecord.getPressure() != null
+                && weatherRecord.getHumidity() != null
+                && weatherRecord.getTemperature() != null;
+    }
+
+    private void addToDb(){
+        if(isWeatherRecordLoaded(weatherRecord)){
+            Log.d("Insert: ", "Inserting ..");
+            weatherRecord.setTime(getCurrentTime());
+            db.addWeatherRecord(weatherRecord);
+            weatherRecord.clear();
+        }
+    }
+
+    private String getCurrentTime(){
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy | HH:mm:ss");
+        return sdf.format(c.getTime());
+    }
+
 
 }
