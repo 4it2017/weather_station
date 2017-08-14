@@ -2,6 +2,7 @@ package com.example.paul.weatherstation;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -100,14 +101,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String selectQuery = "SELECT * FROM " + TABLE_WEATHER_RECORDS;
 
         SQLiteDatabase db = this.getWritableDatabase();
+
         Cursor cursor = db.rawQuery(selectQuery, null);
-        cursor.moveToLast();
-        weatherRecord.setID(Integer.parseInt(cursor.getString(0)));
-        weatherRecord.setTime(cursor.getString(1));
-        weatherRecord.setTemperature(cursor.getString(2));
-        weatherRecord.setHumidity(cursor.getString(3));
-        weatherRecord.setPressure(cursor.getString(4));
-        return weatherRecord;
+        if(cursor.moveToLast()){
+            weatherRecord.setID(Integer.parseInt(cursor.getString(0)));
+            weatherRecord.setTime(cursor.getString(1));
+            weatherRecord.setTemperature(cursor.getString(2));
+            weatherRecord.setHumidity(cursor.getString(3));
+            weatherRecord.setPressure(cursor.getString(4));
+            return weatherRecord;
+        } else {
+          return null;
+        }
     }
 
 
@@ -120,7 +125,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
-        // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
                 WeatherRecord weatherRecord = new WeatherRecord();

@@ -27,6 +27,7 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -38,9 +39,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     MqttConnectOptions mqttConnectOptions;
     private final String serverUri = "tcp://m20.cloudmqtt.com:16691";
     private final String refreshTopic = "nodemcu/requests";
-    private final String temperatureTopic = "nodemcu/2916367/temperature";
-    private final String humidityTopic = "nodemcu/2916367/humidity";
-    private final String pressureTopic = "nodemcu/2916367/pressure";
+    private final String deviceId = "16261926";
+    private final String temperatureTopic = "nodemcu/" + deviceId + "/temperature";
+    private final String humidityTopic = "nodemcu/" + deviceId + "/humidity";
+    private final String pressureTopic = "nodemcu/" + deviceId + "/pressure";
     private final WeatherRecord weatherRecord = new WeatherRecord();
     private final DatabaseHandler db = new DatabaseHandler(this);
 
@@ -62,9 +64,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
         //Set Last Values To Views
-
-        refreshTemperatureView(db.getLastWeatherRecord().getTemperature());
-        refreshHumidityView(db.getLastWeatherRecord().getHumidity());
+        if(db.getLastWeatherRecord() != null) {
+            refreshTemperatureView(db.getLastWeatherRecord().getTemperature());
+            refreshHumidityView(db.getLastWeatherRecord().getHumidity());
+        } else {
+            refreshTemperatureView("-");
+            refreshHumidityView("-");
+        }
 
         //Refresh Action
 
@@ -213,7 +219,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private MqttConnectOptions createMqttConnectOptions() {
         MqttConnectOptions options = new MqttConnectOptions();
-//        options.setCleanSession(false);
+        options.setCleanSession(false);
         options.setUserName("android");
         options.setPassword("android".toCharArray());
         return options;
