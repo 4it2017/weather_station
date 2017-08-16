@@ -39,3 +39,7 @@
   - Tutorial [here](https://learn.sparkfun.com/tutorials/i2c)
   
   
+## Android turials 
+
+- Free course [here](https://classroom.udacity.com/courses/ud851)
+- Android developer tutorial [here](https://developer.android.com/training/index.html)
