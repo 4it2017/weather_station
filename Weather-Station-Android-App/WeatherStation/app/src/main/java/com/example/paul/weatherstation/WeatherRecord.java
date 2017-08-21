@@ -76,4 +76,12 @@ public class WeatherRecord {
         this.temperature = null;
         this.time = null;
     }
+
+    public String getValueX(){
+        return time;
+    }
+
+    public String getValueY(){
+        return temperature;
+    }
 }

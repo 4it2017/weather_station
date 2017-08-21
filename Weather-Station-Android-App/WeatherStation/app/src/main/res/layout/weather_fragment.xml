@@ -2,10 +2,7 @@
 <android.support.v4.widget.SwipeRefreshLayout
     android:id="@+id/swipe"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:showIn="@layout/app_bar_main"
-    tools:context="com.example.paul.weatherstation.MainActivity"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
@@ -28,20 +25,9 @@
                 android:contentDescription="Sunny"
                 app:srcCompat="@drawable/ic_015_sun" />
 
-            <DigitalClock
-                android:id="@+id/clock"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@id/weather_image_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="70sp"
-                android:padding="16dp"
-                android:textStyle="bold"
-                android:textColor="@color/colorPrimaryText"/>
-
             <RelativeLayout
                 android:id="@+id/comfort_level_relative_layout"
-                android:layout_below="@id/clock"
+                android:layout_below="@id/weather_image_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="16dp">
@@ -128,7 +114,8 @@
                     android:textStyle="bold"
                     android:textColor="@color/colorPrimaryText"
                     android:textSize="15sp"
-                    android:text="TEMPERATURE"/>
+                    android:text="TEMPERATURE"
+                    android:layout_centerHorizontal="true"/>
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
