@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <EditTextPreference
+        android:key="mqtt_server_uri"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary=""
+        android:title="MQTT Server Uri" />
+    <EditTextPreference
+        android:key="mqtt_username"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="MQTT User" />
+    <EditTextPreference
+        android:key="mqtt_password"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="MQTT Password" />
+    <EditTextPreference
+        android:key="device_id"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="Device Id" />
+</PreferenceScreen>

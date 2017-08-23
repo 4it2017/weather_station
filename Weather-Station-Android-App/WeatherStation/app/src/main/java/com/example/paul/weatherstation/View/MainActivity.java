@@ -1,11 +1,19 @@
-package com.example.paul.weatherstation;
+package com.example.paul.weatherstation.View;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.AlphaAnimation;
+import android.widget.LinearLayout;
+
+import com.example.paul.weatherstation.R;
+import com.example.paul.weatherstation.SlidingTabLayout;
+import com.example.paul.weatherstation.Utils.AppSettings;
+import com.example.paul.weatherstation.Utils.ViewPagerAdapter;
 
 import static android.R.color.white;
 
@@ -22,6 +30,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        LinearLayout layout = (LinearLayout) findViewById(R.id.main_container);
+        AlphaAnimation animation = new AlphaAnimation(0.0f , 1.0f ) ;
+        animation.setFillAfter(true);
+        animation.setDuration(1200);
+        //apply the animation ( fade In ) to your LAyout
+        layout.startAnimation(animation);
 
         toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
         setSupportActionBar(toolbar);                   // Setting toolbar as the ActionBar with setSupportActionBar() call
@@ -67,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);

@@ -1,8 +1,13 @@
-package com.example.paul.weatherstation;
+package com.example.paul.weatherstation.Utils;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.view.MotionEvent;
+
+import com.example.paul.weatherstation.View.ChartFragment;
+import com.example.paul.weatherstation.View.WeatherFragment;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
@@ -50,4 +55,8 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     public int getCount() {
         return NumbOfTabs;
     }
+
+
+
+
 }

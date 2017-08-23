@@ -1,4 +1,4 @@
-package com.example.paul.weatherstation;
+package com.example.paul.weatherstation.MqttBackgroundService;
 
 import android.app.Service;
 import android.content.Context;
@@ -8,7 +8,9 @@ import android.net.NetworkInfo;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.widget.Toast;
+
+import com.example.paul.weatherstation.Model.DatabaseHandler;
+import com.example.paul.weatherstation.Model.WeatherRecord;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;

@@ -1,20 +1,24 @@
-package com.example.paul.weatherstation;
+package com.example.paul.weatherstation.View;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.paul.weatherstation.Model.DatabaseHandler;
+import com.example.paul.weatherstation.Model.WeatherRecord;
+import com.example.paul.weatherstation.R;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.listener.ChartTouchListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +41,13 @@ public class ChartFragment extends Fragment{
         db = new DatabaseHandler(context);
 
         final LineChart chart = (LineChart) view.findViewById(R.id.chart);
+        chart.setOnTouchListener(new ChartTouchListener(chart) {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                v.getParent().getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
         try {
             List<WeatherRecord> weatherRecords = db.getAllWeatherRecords();
             List<Entry> entries = new ArrayList<>();
@@ -54,6 +65,7 @@ public class ChartFragment extends Fragment{
                 LineData lineData = new LineData(dataSet);
                 chart.setData(lineData);
                 chart.invalidate();
+                this.chartSetup(chart);
             }
         } catch (Exception e) {
             Toast.makeText(context, "Error loading data", Toast.LENGTH_SHORT).show();
@@ -76,5 +88,13 @@ public class ChartFragment extends Fragment{
 
 
         return view;
+    }
+
+    public void chartSetup(LineChart chart){
+        chart.setTouchEnabled(true);
+        chart.setDragEnabled(true);
+        chart.setScaleEnabled(true);
+        chart.setPinchZoom(true);
+        chart.setDoubleTapToZoomEnabled(true);
     }
 }

@@ -1,8 +1,10 @@
-package com.example.paul.weatherstation;
+package com.example.paul.weatherstation.MqttBackgroundService;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+
+import com.example.paul.weatherstation.MqttBackgroundService.MqttConnectionManagerService;
 
 /**
  * Created by Paul on 05-Jul-17.
