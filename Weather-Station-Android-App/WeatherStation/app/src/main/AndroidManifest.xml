@@ -41,7 +41,9 @@
         <service android:name="org.eclipse.paho.android.service.MqttService" />
         <service android:name=".MqttBackgroundService.MqttConnectionManagerService" />
 
-        <activity android:name=".View.SettingsActivity"></activity>
+        <activity android:name=".View.SettingsActivity" />
+        <activity android:name=".View.NoInternetConnection">
+        </activity>
     </application>
 
 </manifest>

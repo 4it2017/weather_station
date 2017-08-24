@@ -1,6 +1,9 @@
 package com.example.paul.weatherstation.View;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.animation.AlphaAnimation;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.paul.weatherstation.R;
 import com.example.paul.weatherstation.SlidingTabLayout;
@@ -64,6 +68,11 @@ public class MainActivity extends AppCompatActivity {
         // Setting the ViewPager For the SlidingTabsLayout
         tabs.setViewPager(pager);
 
+        if(!isOnline()){
+            Intent intent = new Intent(this, NoInternetConnection.class);
+            startActivity(intent);
+        }
+
     }
 
     @Override
@@ -87,5 +96,12 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean isOnline() {
+        ConnectivityManager conMgr = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
+
+        return !(netInfo == null || !netInfo.isConnected() || !netInfo.isAvailable());
     }
 }
