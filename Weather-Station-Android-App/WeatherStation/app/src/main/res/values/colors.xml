@@ -8,6 +8,6 @@
     <color name="colorSecondaryText">#465362</color>
     <color name="colorIcons">#FFFFFF</color>
     <color name="colorDivider">#BDBDBD</color>
-    <color name="tabsScrollColor">#8a140e</color>
-    <color name="backgroundColor">#FBFEF9</color>
+    <color name="tabsScrollColor">#FFFFFF</color>
+    <color name="backgroundColor">#D6F49D</color>
 </resources>

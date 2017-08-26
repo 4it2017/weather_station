@@ -1,4 +1,4 @@
-package com.example.paul.weatherstation.Model;
+package com.example.paul.weatherstation.model;
 
 /**
  * Created by Paul on 07-Aug-17 at 7:22.

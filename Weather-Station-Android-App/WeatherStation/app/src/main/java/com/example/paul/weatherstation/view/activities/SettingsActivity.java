@@ -1,8 +1,7 @@
-package com.example.paul.weatherstation.View;
+package com.example.paul.weatherstation.view.activities;
 
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.example.paul.weatherstation.R;

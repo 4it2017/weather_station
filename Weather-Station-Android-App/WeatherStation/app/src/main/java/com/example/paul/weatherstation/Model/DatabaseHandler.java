@@ -1,4 +1,4 @@
-package com.example.paul.weatherstation.Model;
+package com.example.paul.weatherstation.model;
 
 import android.content.ContentValues;
 import android.content.Context;

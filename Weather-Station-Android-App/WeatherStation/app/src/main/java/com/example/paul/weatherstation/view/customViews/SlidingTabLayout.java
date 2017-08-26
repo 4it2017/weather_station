@@ -1,4 +1,4 @@
-package com.example.paul.weatherstation;
+package com.example.paul.weatherstation.view.customViews;
 
 /**
  * Created by Paul on 03-Jun-17.
@@ -18,6 +18,8 @@ import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.example.paul.weatherstation.R;
 
 /**
  * To be used with ViewPager to provide a tab indicator component which give constant feedback as to

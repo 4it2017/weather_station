@@ -1,9 +1,11 @@
-package com.example.paul.weatherstation.View;
+package com.example.paul.weatherstation.view.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -13,17 +15,19 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.paul.weatherstation.Model.DatabaseHandler;
-import com.example.paul.weatherstation.Model.WeatherRecord;
+import com.example.paul.weatherstation.view.customViews.ViewPagerSnackbar;
+import com.example.paul.weatherstation.helper.WeatherImageChangerHelper;
+import com.example.paul.weatherstation.model.DatabaseHandler;
+import com.example.paul.weatherstation.model.WeatherRecord;
 import com.example.paul.weatherstation.R;
-import com.example.paul.weatherstation.Utils.AppSettings;
+import com.example.paul.weatherstation.model.AppSettings;
+import com.example.paul.weatherstation.view.activities.SettingsActivity;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -53,11 +57,12 @@ public class WeatherFragment extends Fragment {
     private AppSettings settings;
     private TextView temperatureText;
     private TextView humidityText;
+    private View view;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.weather_fragment, container, false);
+        view = inflater.inflate(R.layout.weather_fragment, container, false);
         temperatureText = (TextView) view.findViewById(R.id.temperature_value_text);
         humidityText = (TextView) view.findViewById(R.id.humidity_level_text);
         context = getActivity();
@@ -77,6 +82,10 @@ public class WeatherFragment extends Fragment {
             humidityText.setText("-");
         }
 
+        //Update Images
+
+        this.updateComfortAndWeatherImages(temperatureText.getText().toString(),humidityText.getText().toString());
+
         //Refresh Action
 
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe);
@@ -94,16 +103,16 @@ public class WeatherFragment extends Fragment {
 
         this.mqttAndroidClient = this.createMqttAndroidClient();
         boolean canIConnect = true;
+
         try {
             this.mqttConnectOptions = createMqttConnectOptions();
         } catch (Exception e) {
             canIConnect = false;
-            Toast.makeText(context, "Shit", Toast.LENGTH_SHORT).show();
+            this.showCustomSnackbar();
         }
         if(canIConnect){
             connectToMqtt();
         }
-
 
         return view;
     }
@@ -175,6 +184,7 @@ public class WeatherFragment extends Fragment {
 
     private void addToDb(){
         if(isWeatherRecordLoaded(weatherRecord)){
+            this.updateComfortAndWeatherImages(temperatureText.getText().toString(),humidityText.getText().toString());
             Log.d("Insert: ", "Inserting ..");
             weatherRecord.setTime(getCurrentTime());
             db.addWeatherRecord(weatherRecord);
@@ -241,11 +251,38 @@ public class WeatherFragment extends Fragment {
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                     Toast.makeText(getContext(), "Something went wrong connecting to server.", Toast.LENGTH_SHORT).show();
-                    exception.printStackTrace();
                 }
             });
         } catch (MqttException e) {
             e.printStackTrace();
         }
+    }
+
+    public void updateComfortAndWeatherImages(String temperature, String humidity){
+        Float actualTemperature = Float.parseFloat(temperature);
+        Float actualHumidity = Float.parseFloat(humidity);
+        new WeatherImageChangerHelper(this.view).updateImages(Math.round(actualTemperature), Math.round(actualHumidity));
+    }
+
+    private void showCustomSnackbar(){
+        CoordinatorLayout layout = (CoordinatorLayout) view.findViewById(R.id.coordinator_layout);
+        ViewPagerSnackbar snackbar = ViewPagerSnackbar
+                .make(layout, "Please set-up your connections.", ViewPagerSnackbar.LENGTH_INDEFINITE)
+                .setAction("SETTINGS", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(WeatherFragment.this.getContext(), SettingsActivity.class);
+                        startActivity(intent);
+                    }
+                });
+        snackbar.setActionTextColor(Color.RED);
+        // get snackbar view
+        View snackbarView = snackbar.getView();
+
+        // change snackbar text color
+        int snackbarTextId = android.support.design.R.id.snackbar_text;
+        TextView textView = (TextView)snackbarView.findViewById(snackbarTextId);
+        textView.setTextColor(Color.WHITE);
+        snackbar.show();
     }
 }

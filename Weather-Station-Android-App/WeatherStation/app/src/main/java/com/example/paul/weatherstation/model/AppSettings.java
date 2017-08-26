@@ -1,4 +1,4 @@
-package com.example.paul.weatherstation.Utils;
+package com.example.paul.weatherstation.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;

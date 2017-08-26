@@ -22,7 +22,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".View.MainActivity"
+            android:name=".view.activities.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -32,17 +32,17 @@
             </intent-filter>
         </activity>
         <!-- BroadcastReceiver that starts MqttConnectionManagerService on device boot -->
-        <receiver android:name=".MqttBackgroundService.MqttServiceStartReceiver">
+        <receiver android:name=".mqttBackgroundService.MqttServiceStartReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
         <service android:name="org.eclipse.paho.android.service.MqttService" />
-        <service android:name=".MqttBackgroundService.MqttConnectionManagerService" />
+        <service android:name=".mqttBackgroundService.MqttConnectionManagerService" />
 
-        <activity android:name=".View.SettingsActivity" />
-        <activity android:name=".View.NoInternetConnection">
+        <activity android:name=".view.activities.SettingsActivity" />
+        <activity android:name=".view.activities.NoInternetConnection">
         </activity>
     </application>
 

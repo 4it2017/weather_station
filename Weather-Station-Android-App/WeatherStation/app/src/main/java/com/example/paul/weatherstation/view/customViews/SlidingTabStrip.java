@@ -1,4 +1,4 @@
-package com.example.paul.weatherstation;
+package com.example.paul.weatherstation.view.customViews;
 
 /**
  * Created by Paul on 03-Jun-17.

@@ -1,4 +1,4 @@
-package com.example.paul.weatherstation.View;
+package com.example.paul.weatherstation.view.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -11,8 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.paul.weatherstation.Model.DatabaseHandler;
-import com.example.paul.weatherstation.Model.WeatherRecord;
+import com.example.paul.weatherstation.model.DatabaseHandler;
+import com.example.paul.weatherstation.model.WeatherRecord;
 import com.example.paul.weatherstation.R;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
