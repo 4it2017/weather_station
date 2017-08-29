@@ -35,11 +35,11 @@ dependencies {
     compile('org.eclipse.paho:org.eclipse.paho.android.service:1.0.2') {
         exclude module: 'support-v4'
     }
-    compile 'com.github.PhilJay:MPAndroidChart:v3.0.2'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
     compile 'com.ramotion.foldingcell:folding-cell:1.1.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.1'
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.8'
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.2'
     testCompile 'junit:junit:4.12'
 }

@@ -5,8 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -14,6 +19,8 @@ import java.util.List;
  */
 
 public class DatabaseHandler extends SQLiteOpenHelper {
+
+    private Context context;
 
     // All Static variables
     // Database Version
@@ -35,6 +42,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.context = context;
     }
 
     // Creating Tables
@@ -63,16 +71,26 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Adding new weather recording
     public void addWeatherRecord(WeatherRecord weatherRecord) {
         SQLiteDatabase db = this.getWritableDatabase();
+//
+//        boolean isUnique = true;
+//        if(this.getAllWeatherRecords().get(this.getAllWeatherRecords().size()).getTimeAsDate().getMinutes()
+//                == weatherRecord.getTimeAsDate().getMinutes()&&
+//            this.getAllWeatherRecords().get(this.getAllWeatherRecords().size()).getTimeAsDate().getHours()
+//                    == weatherRecord.getTimeAsDate().getHours()) {
+//            isUnique = false;
+//        }
 
-        ContentValues values = new ContentValues();
-        values.put(KEY_TIME, weatherRecord.getTime());
-        values.put(KEY_TEMP, weatherRecord.getTemperature());
-        values.put(KEY_HUM, weatherRecord.getHumidity());
-        values.put(KEY_PRESS, weatherRecord.getPressure());
+//        if(isUnique) {
+            ContentValues values = new ContentValues();
+            values.put(KEY_TIME, convertDateToString(weatherRecord.getTimeAsDate()));
+            values.put(KEY_TEMP, weatherRecord.getTemperature());
+            values.put(KEY_HUM, weatherRecord.getHumidity());
+            values.put(KEY_PRESS, weatherRecord.getPressure());
 
-        // Inserting Row
-        db.insert(TABLE_WEATHER_RECORDS, null, values);
-        db.close(); // Closing database connection
+            // Inserting Row
+            db.insert(TABLE_WEATHER_RECORDS, null, values);
+            db.close(); // Closing database connection
+//        }
     }
 
     // Getting single WeatherRecord
@@ -88,9 +106,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         WeatherRecord weatherRecord = null;
         if (cursor != null) {
             weatherRecord = new WeatherRecord(Integer.parseInt(cursor.getString(0)),
-                    cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4));
+                    cursor.getString(2), cursor.getString(3), cursor.getString(4), convertStringToDate(cursor.getString(1)));
         }
-        // return contact
+        // return record
         return weatherRecord;
     }
 
@@ -104,7 +122,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(selectQuery, null);
         if(cursor.moveToLast()){
             weatherRecord.setID(Integer.parseInt(cursor.getString(0)));
-            weatherRecord.setTime(cursor.getString(1));
+            weatherRecord.setTime(convertStringToDate(cursor.getString(1)));
             weatherRecord.setTemperature(cursor.getString(2));
             weatherRecord.setHumidity(cursor.getString(3));
             weatherRecord.setPressure(cursor.getString(4));
@@ -128,7 +146,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             do {
                 WeatherRecord weatherRecord = new WeatherRecord();
                 weatherRecord.setID(Integer.parseInt(cursor.getString(0)));
-                weatherRecord.setTime(cursor.getString(1));
+                weatherRecord.setTime(convertStringToDate(cursor.getString(1)));
                 weatherRecord.setTemperature(cursor.getString(2));
                 weatherRecord.setHumidity(cursor.getString(3));
                 weatherRecord.setPressure(cursor.getString(4));
@@ -146,7 +164,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(KEY_TIME, weatherRecord.getTime());
+        values.put(KEY_TIME, convertDateToString(weatherRecord.getTimeAsDate()));
         values.put(KEY_TEMP, weatherRecord.getTemperature());
         values.put(KEY_HUM, weatherRecord.getHumidity());
         values.put(KEY_PRESS, weatherRecord.getPressure());
@@ -173,6 +191,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         // return count
         return cursor.getCount();
+    }
+
+
+    private String convertDateToString(Date date){
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy | HH:mm:ss");
+        return sdf.format(date.getTime());
+    }
+
+    private Date convertStringToDate(String string){
+        DateFormat format = new SimpleDateFormat("dd-MM-yyyy | HH:mm:ss");
+        Date date = null;
+        try {
+            date = format.parse(string);
+        } catch (ParseException e) {
+            Toast.makeText(this.context, "Error Parsing Date To String", Toast.LENGTH_SHORT).show();
+        }
+        return date;
     }
 
 }

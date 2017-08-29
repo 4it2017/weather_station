@@ -136,7 +136,6 @@ public class MqttConnectionManagerService extends Service{
                             default:
                                 break;
                         }
-                        weatherRecord.setTime(strDate);
                         db.addWeatherRecord(weatherRecord);
                     }
 
@@ -166,17 +165,10 @@ public class MqttConnectionManagerService extends Service{
     private void addToDb(){
         if(isWeatherRecordLoaded(weatherRecord)){
             Log.d("Insert: ", "Inserting ..");
-            weatherRecord.setTime(getCurrentTime());
-            db.addWeatherRecord(weatherRecord);
+            weatherRecord.setTime(Calendar.getInstance().getTime());
+            //db.addWeatherRecord(weatherRecord);
             weatherRecord.clear();
         }
     }
-
-    private String getCurrentTime(){
-        Calendar c = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy | HH:mm:ss");
-        return sdf.format(c.getTime());
-    }
-
 
 }

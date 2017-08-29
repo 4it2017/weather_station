@@ -32,7 +32,6 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
@@ -58,6 +57,7 @@ public class WeatherFragment extends Fragment {
     private TextView temperatureText;
     private TextView humidityText;
     private View view;
+    private boolean firstIncomingData;
 
     @Nullable
     @Override
@@ -73,13 +73,14 @@ public class WeatherFragment extends Fragment {
         humidityTopic = "nodemcu/" + deviceId + "/humidity";
         pressureTopic = "nodemcu/" + deviceId + "/pressure";
 
+        firstIncomingData = true;
         //Set Last Values To Views
         if(db.getLastWeatherRecord() != null) {
             temperatureText.setText(db.getLastWeatherRecord().getTemperature());
             humidityText.setText(db.getLastWeatherRecord().getHumidity());
         } else {
-            temperatureText.setText("-");
-            humidityText.setText("-");
+            temperatureText.setText("0");
+            humidityText.setText("0");
         }
 
         //Update Images
@@ -163,49 +164,6 @@ public class WeatherFragment extends Fragment {
         }
     }
 
-    private MqttMessage getRefreshMessage(){
-        String payload = "NEED REFRESH!";
-        byte[] encodedPayload;
-        encodedPayload = payload.getBytes();
-        return new MqttMessage(encodedPayload);
-    }
-
-    private boolean isWeatherRecordLoaded(WeatherRecord weatherRecord){
-        return weatherRecord.getPressure() != null
-                && weatherRecord.getHumidity() != null
-                && weatherRecord.getTemperature() != null;
-    }
-
-    private String getCurrentTime(){
-        Calendar c = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy | HH:mm:ss");
-        return sdf.format(c.getTime());
-    }
-
-    private void addToDb(){
-        if(isWeatherRecordLoaded(weatherRecord)){
-            this.updateComfortAndWeatherImages(temperatureText.getText().toString(),humidityText.getText().toString());
-            Log.d("Insert: ", "Inserting ..");
-            weatherRecord.setTime(getCurrentTime());
-            db.addWeatherRecord(weatherRecord);
-            weatherRecord.clear();
-            addWeatherRecordsToLog();
-        }
-    }
-
-    private void addWeatherRecordsToLog(){
-        //Adding weatherRecords to Log
-        Log.d("Reading: ", "Reading all contacts..");
-        List<WeatherRecord> weatherRecordList = db.getAllWeatherRecords();
-
-        for (WeatherRecord weatherRecord : weatherRecordList) {
-            String log = "Id: " + weatherRecord.getID() + " ,Time: " + weatherRecord.getTime() + " ,Temperature: " + weatherRecord.getTemperature() + " ,Humidity:" + weatherRecord.getHumidity() + " ,Pressure:" + weatherRecord.getPressure();
-            // Writing Contacts to log
-            Log.d("Name: ", log);
-            System.out.println("Name: " + log);
-        }
-    }
-
     private void connectToMqtt(){
 
         this.mqttAndroidClient.setCallback(new MqttCallback() {
@@ -229,9 +187,6 @@ public class WeatherFragment extends Fragment {
                 } else if (topic.equals(pressureTopic)) {
                     weatherRecord.setPressure(message.toString());
                     addToDb();
-
-                } else {
-                    //
                 }
             }
 
@@ -284,5 +239,45 @@ public class WeatherFragment extends Fragment {
         TextView textView = (TextView)snackbarView.findViewById(snackbarTextId);
         textView.setTextColor(Color.WHITE);
         snackbar.show();
+    }
+
+    private MqttMessage getRefreshMessage(){
+        String payload = "NEED REFRESH!";
+        byte[] encodedPayload;
+        encodedPayload = payload.getBytes();
+        return new MqttMessage(encodedPayload);
+    }
+
+    private boolean isWeatherRecordLoaded(WeatherRecord weatherRecord){
+        return weatherRecord.getPressure() != null
+                && weatherRecord.getHumidity() != null
+                && weatherRecord.getTemperature() != null;
+    }
+
+    private void addToDb(){
+        if(isWeatherRecordLoaded(weatherRecord)){
+            if(!firstIncomingData) {
+                this.updateComfortAndWeatherImages(temperatureText.getText().toString(), humidityText.getText().toString());
+                Log.d("Insert: ", "Inserting ..");
+                weatherRecord.setTime(Calendar.getInstance().getTime());
+                db.addWeatherRecord(weatherRecord);
+                weatherRecord.clear();
+                addWeatherRecordsToLog();
+            }
+            firstIncomingData = false;
+        }
+    }
+
+    private void addWeatherRecordsToLog(){
+        //Adding weatherRecords to Log
+        Log.d("Reading: ", "Reading all contacts..");
+        List<WeatherRecord> weatherRecordList = db.getAllWeatherRecords();
+
+        for (WeatherRecord weatherRecord : weatherRecordList) {
+            String log = "Id: " + weatherRecord.getID() + " ,Time: " + weatherRecord.getTimeAsDate() + " ,Temperature: " + weatherRecord.getTemperature() + " ,Humidity:" + weatherRecord.getHumidity() + " ,Pressure:" + weatherRecord.getPressure();
+            // Writing Contacts to log
+            Log.d("Name: ", log);
+            System.out.println("Name: " + log);
+        }
     }
 }

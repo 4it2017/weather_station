@@ -1,5 +1,7 @@
 package com.example.paul.weatherstation.model;
 
+import java.util.Date;
+
 /**
  * Created by Paul on 07-Aug-17 at 7:22.
  */
@@ -9,13 +11,13 @@ public class WeatherRecord {
     private String temperature;
     private String humidity;
     private String pressure;
-    private String time;
+    private Date time;
 
     public WeatherRecord(){
 
     }
 
-    public WeatherRecord(int id, String temperature, String humidity, String pressure, String time){
+    public WeatherRecord(int id, String temperature, String humidity, String pressure, Date time){
         this.id = id;
         this.temperature = temperature;
         this.humidity = humidity;
@@ -23,7 +25,7 @@ public class WeatherRecord {
         this.time = time;
     }
 
-    public WeatherRecord(String temperature, String humidity, String pressure, String time){
+    public WeatherRecord(String temperature, String humidity, String pressure, Date time){
         this.temperature = temperature;
         this.humidity = humidity;
         this.pressure = pressure;
@@ -62,11 +64,11 @@ public class WeatherRecord {
         this.pressure = pressure;
     }
 
-    public String getTime() {
+    public Date getTimeAsDate() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(Date time) {
         this.time = time;
     }
 
@@ -77,7 +79,7 @@ public class WeatherRecord {
         this.time = null;
     }
 
-    public String getValueX(){
+    public Date getValueX(){
         return time;
     }
 

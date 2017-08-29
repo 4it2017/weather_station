@@ -15,13 +15,18 @@ import com.example.paul.weatherstation.model.DatabaseHandler;
 import com.example.paul.weatherstation.model.WeatherRecord;
 import com.example.paul.weatherstation.R;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.listener.ChartTouchListener;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Created by Paul on 19-Aug-17 at 4:08 PM.
@@ -30,7 +35,6 @@ import java.util.List;
 public class ChartFragment extends Fragment{
     private Context context;
     public DatabaseHandler db;
-    private SwipeRefreshLayout swipeContainer;
     
     @Nullable
     @Override
@@ -40,14 +44,15 @@ public class ChartFragment extends Fragment{
         context = getActivity();
         db = new DatabaseHandler(context);
 
-        final LineChart chart = (LineChart) view.findViewById(R.id.chart);
-        chart.setOnTouchListener(new ChartTouchListener(chart) {
+        final LineChart chart = (LineChart) view.findViewById(R.id.graph);
+        chart.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 v.getParent().getParent().requestDisallowInterceptTouchEvent(true);
                 return false;
             }
         });
+
         try {
             List<WeatherRecord> weatherRecords = db.getAllWeatherRecords();
             List<Entry> entries = new ArrayList<>();
@@ -55,7 +60,7 @@ public class ChartFragment extends Fragment{
             for (WeatherRecord weatherRecord : weatherRecords){
                 int i = 0;
                 if(weatherRecord.getValueY()!= null) {
-                    entries.add(new Entry(i, Float.parseFloat(weatherRecord.getValueY())));
+                    entries.add(new Entry(weatherRecord.getValueX().getTime(), Float.parseFloat(weatherRecord.getValueY())));
                     ++i;
                     isListEmpty = false;
                 }
@@ -64,28 +69,20 @@ public class ChartFragment extends Fragment{
                 LineDataSet dataSet = new LineDataSet(entries, "Weather Records");
                 LineData lineData = new LineData(dataSet);
                 chart.setData(lineData);
-                chart.invalidate();
+                XAxis xAxis = chart.getXAxis();
+                xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+                xAxis.setGranularity(1f);
+                xAxis.setDrawGridLines(false);
+                xAxis.setValueFormatter(createDateFormatter());
+                xAxis.setDrawLabels(true);
+                xAxis.setCenterAxisLabels(true);
+                xAxis.setLabelRotationAngle(90f); // rotates label so we can see it all
                 this.chartSetup(chart);
+                chart.invalidate();
             }
         } catch (Exception e) {
             Toast.makeText(context, "Error loading data", Toast.LENGTH_SHORT).show();
         }
-
-        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
-
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
-
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                chart.invalidate();
-                swipeContainer.setRefreshing(false);
-            }
-        });
-
 
         return view;
     }
@@ -96,5 +93,49 @@ public class ChartFragment extends Fragment{
         chart.setScaleEnabled(true);
         chart.setPinchZoom(true);
         chart.setDoubleTapToZoomEnabled(true);
+    }
+
+    public WeatherRecord[] getFirstAndLastWeatherRecord(){
+        WeatherRecord[] weatherRecords = new WeatherRecord[2];
+        boolean first = true;
+        for (WeatherRecord weatherRecord : db.getAllWeatherRecords()){
+            if(first){
+                weatherRecords[0] = weatherRecord;
+                first = false;
+            }
+                weatherRecords[1] = weatherRecord;
+        }
+        return weatherRecords;
+    }
+
+    IAxisValueFormatter createDateFormatter() {
+        IAxisValueFormatter formatter = new IAxisValueFormatter() {
+
+
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                Date date = new Date((long) value);
+
+                SimpleDateFormat fmt;
+
+                fmt = new SimpleDateFormat("MMM d H:mm"); //TODO remove after tests and add switch
+                fmt.setTimeZone(TimeZone.getDefault()); // sets time zone... I think I did this properly...
+
+
+                String s = fmt.format(date);
+
+
+                return s;
+            }
+
+            // we don't draw numbers, so no decimal digits needed
+            public int getDecimalDigits() {
+                return 0;
+            }
+
+
+        };
+
+        return formatter;
     }
 }
