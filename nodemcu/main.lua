@@ -4,7 +4,10 @@ dofile("settings.lua")
 wifi.setmode(wifi.STATION)
 wifi.setphymode(wifi.PHYMODE_N)
 
-wifi.sta.config(WIFI_SSID,WIFI_PASS)
+station_cfg={}
+station_cfg.ssid=WIFI_SSID
+station_cfg.pwd=WIFI_PASS
+wifi.sta.config(station_cfg)
 wifi.sta.connect()
 
 retries = 0
@@ -20,39 +23,51 @@ function verifConnect()
 
     if(connected) then
         print("wifi connected")
-        tmr.unregister(mytimer)       
+        tmr.unregister(mytimer)
+               
         mqttConnectAndSend()
     end
     
     if (timedOut) then 
         tmr.unregister(mytimer)       
         print("wifi timed out")
-        node.dsleep(OPT_SAMPLING)
+        rtctime.dsleep(OPT_SAMPLING)
     end
     retries = retries + 1
 end
 
 function mqttConnectAndSend()
- 
-    mqtt = mqtt.Client(node.chipid(), 120, MQTT_USER, MQTT_PASS)
-    mqtt:on("connect", function(con) print ("mqtt connected") end)
-    mqtt:on("offline", function(con) print ("mqtt offline") end) 
+
+    sntp.sync("ro.pool.ntp.org", function(sec, usec, server, info)
     
-    mqtt:connect(MQTT_SERVER, MQTT_PORT, 0, function(conn) 
-    temp, humi, pressure = readSensors()
-    mqtt:publish("nodemcu/"..node.chipid().."/temperature", temp, 1, 0, function(conn) 
-        print("sent temp "..temp) 
-        mqtt:publish("nodemcu/"..node.chipid().."/humidity", humi, 1, 0, function(conn) 
-            print("sent humi "..humi)   
-            mqtt:publish("nodemcu/"..node.chipid().."/pressure", pressure, 1, 0, function(conn) 
-                print("sent pressure "..pressure) 
-                print("sleep")
-                node.dsleep(OPT_SAMPLING)
-            end)  
-        end)  
-    end)
+        time = rtctime.epoch2cal(rtctime.get())
+        string_time = string.format("%04d/%02d/%02d %02d:%02d:%02d", time["year"], time["mon"], time["day"],time["hour"], time["min"], time["sec"])
+        print(string.format("%04d/%02d/%02d %02d:%02d:%02d", time["year"], time["mon"], time["day"],time["hour"], time["min"], time["sec"]))
+        
      
-    end)
+        mqtt = mqtt.Client(node.chipid(), 120, MQTT_USER, MQTT_PASS)
+        mqtt:on("connect", function(con) print ("mqtt connected") end)
+        mqtt:on("offline", function(con) print ("mqtt offline") end) 
+        
+        mqtt:connect(MQTT_SERVER, MQTT_PORT, 0, function(conn) 
+        temp, humi, pressure = readSensors()
+        mqtt:publish("nodemcu/"..node.chipid() , string_time.."|"..temp.."|"..humi.."|"..pressure, 1, 0, function(conn) 
+            print("nodemcu/"..node.chipid().."|"..string_time.."|"..temp.."|"..humi.."|"..pressure) 
+            node.dsleep(OPT_SAMPLING)
+    --        mqtt:publish("nodemcu/"..node.chipid().."/humidity", humi, 1, 0, function(conn) 
+    --            print("sent humi "..humi)   
+    --            mqtt:publish("nodemcu/"..node.chipid().."/pressure", pressure, 1, 0, function(conn) 
+    --                print("sent pressure "..pressure) 
+    --                print("sleep")
+    --            end)  
+    --        end)  
+        end) 
+        end)
+     end,
+    function()
+    print('failed!')
+    end
+    )
 end
 
 function readSensors()
