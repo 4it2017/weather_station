@@ -11,8 +11,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.paul.weatherstation.R;
+import com.example.paul.weatherstation.helper.BgImageChangerHelper;
 import com.example.paul.weatherstation.view.customViews.SlidingTabLayout;
 import com.example.paul.weatherstation.view.ViewPagerAdapter;
 
@@ -34,6 +36,11 @@ public class MainActivity extends AppCompatActivity {
 
         LinearLayout layout = (LinearLayout) findViewById(R.id.main_container);
 
+        //Set Wallpaper
+        BgImageChangerHelper bgChanger = new BgImageChangerHelper();
+        bgChanger.pickRandomBg(layout);
+
+        //Toolbar
         toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
         setSupportActionBar(toolbar);                   // Setting toolbar as the ActionBar with setSupportActionBar() call
         toolbar.setTitleTextColor(getResources().getColor(white));

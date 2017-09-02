@@ -30,21 +30,17 @@ public class WeatherImageChangerHelper {
 
         if (humidity > 80) {
             if(freezing){
-                this.weatherDescriptionImage.setImageResource(R.drawable.ic_021_snow_2);
+                this.weatherDescriptionImage.setImageResource(R.drawable.weather_rain);
             } else {
-                this.weatherDescriptionImage.setImageResource(R.drawable.ic_rainy);
+                this.weatherDescriptionImage.setImageResource(R.drawable.weather_snow);
             }
         } else if (humidity > 60){
-            this.weatherDescriptionImage.setImageResource(R.drawable.ic_026_cloud_13);
+            this.weatherDescriptionImage.setImageResource(R.drawable.weather_few_clouds);
         } else {
             if(timeOfDay >= 21 || timeOfDay < 6){
-                this.weatherDescriptionImage.setImageResource(R.drawable.ic_023_moon);
-            } else if(timeOfDay >= 16 && timeOfDay < 18) {
-                this.weatherDescriptionImage.setImageResource(R.drawable.ic_019_sunset);
-            } else if(timeOfDay >= 18 && timeOfDay < 21){
-                this.weatherDescriptionImage.setImageResource(R.drawable.ic_016_sunset_3);
+                this.weatherDescriptionImage.setImageResource(R.drawable.weather_clear_night);
             } else {
-                this.weatherDescriptionImage.setImageResource(R.drawable.ic_015_sun);
+                this.weatherDescriptionImage.setImageResource(R.drawable.weather_clear);
             }
         }
 
