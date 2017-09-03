@@ -45,13 +45,13 @@ public class WeatherImageChangerHelper {
         }
 
         //Comfort Level
-        if((temperature > 20 && temperature < 30 ) && ( humidity > 30 && humidity < 60 )) {
+        if((temperature >= 20 && temperature <= 30 ) && ( humidity >= 30 && humidity <= 60 )) {
             this.comfortLevelImage.setImageResource(R.drawable.ic_emoticon_square_smile);
-        } else if((( temperature > 30 && temperature < 35 ) || (temperature > 15 && temperature < 20)) && (( humidity > 10 && humidity < 30 ) || ( humidity > 60 && humidity < 80 ))){
+        } else if((( temperature >= 30 && temperature <= 35 ) || (temperature >= 15 && temperature <= 20)) && (( humidity >= 10 && humidity <= 30 ) || ( humidity >= 60 && humidity <= 80 ))){
             this.comfortLevelImage.setImageResource(R.drawable.ic_emoticon_square_face_with_straight_mouth);
-        } else if((( temperature > 30 && temperature < 35 ) || (temperature > 15 && temperature < 20)) && ( humidity > 30 && humidity < 60 )){
+        } else if((( temperature >= 30 && temperature <= 35 ) || (temperature >= 15 && temperature <= 20)) && ( humidity >= 30 && humidity <= 60 )){
             this.comfortLevelImage.setImageResource(R.drawable.ic_emoticon_square_face_with_straight_mouth);
-        } else if((temperature > 20 && temperature < 30 ) && (( humidity > 10 && humidity < 30 ) || ( humidity > 60 && humidity < 80 ))){
+        } else if((temperature >= 20 && temperature <= 30 ) && (( humidity >= 10 && humidity <= 30 ) || ( humidity >= 60 && humidity <= 80 ))){
             this.comfortLevelImage.setImageResource(R.drawable.ic_emoticon_square_face_with_straight_mouth);
         } else {
             this.comfortLevelImage.setImageResource(R.drawable.ic_sad_emoticon_square_face);

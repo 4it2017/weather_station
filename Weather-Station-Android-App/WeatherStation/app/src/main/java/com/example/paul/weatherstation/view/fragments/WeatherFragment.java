@@ -98,6 +98,7 @@ public class WeatherFragment extends Fragment {
             @Override
             public void onRefresh() {
                 publishRefreshMessage();
+                WeatherFragment.this.updateComfortAndWeatherImages(temperatureText.getText().toString(),humidityText.getText().toString());
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
