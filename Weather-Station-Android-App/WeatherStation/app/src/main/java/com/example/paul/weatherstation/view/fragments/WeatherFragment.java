@@ -32,7 +32,10 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -50,7 +53,6 @@ public class WeatherFragment extends Fragment {
     private String temperatureTopic;
     private String humidityTopic;
     private String pressureTopic;
-    private final WeatherRecord weatherRecord = new WeatherRecord();
     private Context context;
     public DatabaseHandler db;
     private AppSettings settings;
@@ -69,9 +71,9 @@ public class WeatherFragment extends Fragment {
         db = new DatabaseHandler(context);
         settings = AppSettings.ReadSettings(context);
         deviceId = settings.getDeviceId();
-        temperatureTopic = "nodemcu/" + deviceId + "/temperature";
-        humidityTopic = "nodemcu/" + deviceId + "/humidity";
-        pressureTopic = "nodemcu/" + deviceId + "/pressure";
+//        temperatureTopic = "nodemcu/" + deviceId + "/temperature";
+//        humidityTopic = "nodemcu/" + deviceId + "/humidity";
+//        pressureTopic = "nodemcu/" + deviceId + "/pressure";
 
         firstIncomingData = true;
         //Set Last Values To Views
@@ -123,8 +125,8 @@ public class WeatherFragment extends Fragment {
     private MqttConnectOptions createMqttConnectOptions() {
         MqttConnectOptions options = new MqttConnectOptions();
         options.setCleanSession(false);
-        options.setUserName(settings.getMqttUserName());
-        options.setPassword(settings.getMqttPassword().toCharArray());
+        options.setUserName(settings.getDeviceId());
+        options.setPassword(settings.getDeviceId().toCharArray());
         return options;
     }
 
@@ -135,7 +137,7 @@ public class WeatherFragment extends Fragment {
 
     public void subscribeToTopics(){
         try {
-            mqttAndroidClient.subscribe("nodemcu/#", 1, null, new IMqttActionListener() {
+            mqttAndroidClient.subscribe(settings.getSubscriptionTopic(), 1, null, new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
 
@@ -173,20 +175,20 @@ public class WeatherFragment extends Fragment {
             }
 
             @Override
-            public void messageArrived(String topic, MqttMessage message) throws Exception {
-                if (topic.equals(temperatureTopic)) {
-                    temperatureText.setText(message.toString());
-                    weatherRecord.setTemperature(message.toString());
-                    addToDb();
-
-                } else if (topic.equals(humidityTopic)) {
-                    humidityText.setText(message.toString());
-                    weatherRecord.setHumidity(message.toString());
-                    addToDb();
-
-                } else if (topic.equals(pressureTopic)) {
-                    weatherRecord.setPressure(message.toString());
-                    addToDb();
+            public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
+                if(topic.equals(settings.getSubscriptionTopic())) {
+                    String message = mqttMessage.toString();
+                    if (message != null && message.length() > 0) {
+                        String[] lineComponents = message.split(";");
+                        Date date = WeatherFragment.this.convertStringToDate(lineComponents[0]);
+                        String temperature = lineComponents[1];
+                        temperatureText.setText(temperature);
+                        String humidity = lineComponents[2];
+                        humidityText.setText(humidity);
+                        String pressure = lineComponents[3];
+                        WeatherRecord weatherRecord = new WeatherRecord(temperature, humidity, pressure, date);
+                        addToDb(weatherRecord);
+                    }
                 }
             }
 
@@ -254,16 +256,14 @@ public class WeatherFragment extends Fragment {
                 && weatherRecord.getTemperature() != null;
     }
 
-    private void addToDb(){
+    private void addToDb(WeatherRecord weatherRecord){
         if(isWeatherRecordLoaded(weatherRecord)){
             if(!firstIncomingData) {
-                this.updateComfortAndWeatherImages(temperatureText.getText().toString(), humidityText.getText().toString());
                 Log.d("Insert: ", "Inserting ..");
-                weatherRecord.setTime(Calendar.getInstance().getTime());
                 db.addWeatherRecord(weatherRecord);
-                weatherRecord.clear();
                 addWeatherRecordsToLog();
             }
+            this.updateComfortAndWeatherImages(temperatureText.getText().toString(), humidityText.getText().toString());
             firstIncomingData = false;
         }
     }
@@ -279,5 +279,16 @@ public class WeatherFragment extends Fragment {
             Log.d("Name: ", log);
             System.out.println("Name: " + log);
         }
+    }
+
+    public Date convertStringToDate(String string){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = null;
+        try {
+            date = format.parse(string);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
     }
 }

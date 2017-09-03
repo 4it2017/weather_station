@@ -33,14 +33,8 @@
             </intent-filter>
         </activity>
         <!-- BroadcastReceiver that starts MqttConnectionManagerService on device boot -->
-        <receiver android:name=".mqttBackgroundService.MqttServiceStartReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
 
         <service android:name="org.eclipse.paho.android.service.MqttService" />
-        <service android:name=".mqttBackgroundService.MqttConnectionManagerService" />
 
         <activity android:name=".view.activities.SettingsActivity" />
         <activity android:name=".view.activities.NoInternetConnection">

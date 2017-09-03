@@ -40,7 +40,7 @@ public class AppSettings {
     }
 
     public String getSubscriptionTopic() {
-        return  "nodemcu/"+ _deviceId + "/#";
+        return  "nodemcu/"+ _deviceId ;
     }
 
     public String getDeviceId(){

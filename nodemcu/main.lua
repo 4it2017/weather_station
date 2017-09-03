@@ -51,7 +51,7 @@ function mqttConnectAndSend()
         
         mqtt:connect(MQTT_SERVER, MQTT_PORT, 0, function(conn) 
         temp, humi, pressure = readSensors()
-        mqtt:publish("nodemcu/"..node.chipid() , string_time.."|"..temp.."|"..humi.."|"..pressure, 1, 0, function(conn) 
+        mqtt:publish("nodemcu/"..node.chipid() , string_time..";"..temp..";"..humi..";"..pressure, 1, 0, function(conn) 
             print("nodemcu/"..node.chipid().."|"..string_time.."|"..temp.."|"..humi.."|"..pressure) 
             node.dsleep(OPT_SAMPLING)
     --        mqtt:publish("nodemcu/"..node.chipid().."/humidity", humi, 1, 0, function(conn) 
@@ -69,6 +69,7 @@ function mqttConnectAndSend()
     end
     )
 end
+--nodemcu/2134124124
 
 function readSensors()
     bme280.init(2,1)
