@@ -290,6 +290,11 @@ public class WeatherFragment extends Fragment {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        try {
+            date.setHours(date.getHours()+3); //Set time zone to GMT+3 or whatever
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
         return date;
     }
 }
