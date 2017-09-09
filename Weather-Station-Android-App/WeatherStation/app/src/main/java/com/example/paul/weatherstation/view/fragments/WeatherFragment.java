@@ -31,6 +31,7 @@ import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.w3c.dom.Text;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -60,6 +61,7 @@ public class WeatherFragment extends Fragment {
     private TextView humidityText;
     private View view;
     private boolean firstIncomingData;
+    private TextView lastRecordDate;
 
     @Nullable
     @Override
@@ -67,6 +69,7 @@ public class WeatherFragment extends Fragment {
         view = inflater.inflate(R.layout.weather_fragment, container, false);
         temperatureText = (TextView) view.findViewById(R.id.temperature_value_text);
         humidityText = (TextView) view.findViewById(R.id.humidity_level_text);
+        lastRecordDate = (TextView) view.findViewById(R.id.last_record);
         context = getActivity();
         db = new DatabaseHandler(context);
         settings = AppSettings.ReadSettings(context);
@@ -80,9 +83,11 @@ public class WeatherFragment extends Fragment {
         if(db.getLastWeatherRecord() != null) {
             temperatureText.setText(db.getLastWeatherRecord().getTemperature());
             humidityText.setText(db.getLastWeatherRecord().getHumidity());
+            lastRecordDate.setText("Last record: " + formateDateForDisplay(db.getLastWeatherRecord().getTimeAsDate()));
         } else {
             temperatureText.setText("0");
             humidityText.setText("0");
+            lastRecordDate.setText("Last record: N/A");
         }
 
         //Update Images
@@ -187,6 +192,7 @@ public class WeatherFragment extends Fragment {
                         String humidity = lineComponents[2];
                         humidityText.setText(humidity);
                         String pressure = lineComponents[3];
+                        lastRecordDate.setText("Last record: " + formateDateForDisplay(date));
                         WeatherRecord weatherRecord = new WeatherRecord(temperature, humidity, pressure, date);
                         addToDb(weatherRecord);
                     }
@@ -296,5 +302,10 @@ public class WeatherFragment extends Fragment {
             e.printStackTrace();
         }
         return date;
+    }
+
+    public String formateDateForDisplay(Date date){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM HH:mm");
+        return simpleDateFormat.format(date);
     }
 }

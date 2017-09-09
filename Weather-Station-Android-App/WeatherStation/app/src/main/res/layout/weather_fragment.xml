@@ -152,6 +152,15 @@
                     android:contentDescription="Comfort Level Image"
                     app:srcCompat="@drawable/ic_emoticon_square_smile" />
             </RelativeLayout>
+            <TextView
+                android:id="@+id/last_record"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/comfort_level_relative_layout"
+                android:textSize="15sp"
+                android:textColor="@color/colorPrimaryText"
+                android:text="Last record: N/A"/>
 
         </RelativeLayout>
 
