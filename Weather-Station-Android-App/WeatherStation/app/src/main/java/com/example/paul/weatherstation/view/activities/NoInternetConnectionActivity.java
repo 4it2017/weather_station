@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import com.example.paul.weatherstation.R;
 
-public class NoInternetConnection extends AppCompatActivity {
+public class NoInternetConnectionActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

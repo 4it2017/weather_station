@@ -2,7 +2,10 @@ package com.example.paul.weatherstation.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.EditTextPreference;
 import android.preference.PreferenceManager;
+
+import com.example.paul.weatherstation.R;
 
 /**
  * Created by Paul on 23-Aug-17 at 4:56 PM.
@@ -50,4 +53,5 @@ public class AppSettings {
     public String getClientId (){
         return "android" + _deviceId;
     }
+
 }

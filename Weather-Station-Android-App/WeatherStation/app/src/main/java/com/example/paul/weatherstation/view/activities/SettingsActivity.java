@@ -1,5 +1,8 @@
 package com.example.paul.weatherstation.view.activities;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.EditTextPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.os.Bundle;
@@ -22,7 +25,6 @@ public class SettingsActivity extends PreferenceActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.activity_settings);
         }
-
 
     }
 }

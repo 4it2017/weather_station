@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.paul.weatherstation.view.activities.WelcomeScreenActivity"
+    android:background="@drawable/blue">
+
+    <TextView
+        android:id="@+id/welcome_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="WELCOME TO YOUR WEATHER STATION!"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/colorPrimaryText"
+        android:textSize="25sp"
+        android:layout_marginTop="100dp"
+        android:padding="25dp"
+        />
+
+    <TextView
+        android:layout_below="@id/welcome_text_view"
+        android:id="@+id/please_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="Please enter your device ID below."
+        android:textColor="@color/colorPrimaryText"/>
+
+    <LinearLayout
+        android:id="@+id/input_layout_view"
+        android:layout_below="@id/please_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ID: "
+            android:textColor="@color/colorPrimaryText"
+            android:textSize="25sp"
+            android:layout_marginTop="10dp"/>
+
+        <EditText
+            android:id="@+id/device_id_edit_text_view"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="right"
+            android:textColor="@color/colorPrimaryText"
+            android:ems="20"
+            android:textSize="20sp"
+            android:hint="e.g. 2726147243"
+            android:inputType="numberPassword" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/angry_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/input_layout_view"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/buttonshape"
+        android:elevation="6dp"
+        android:gravity="center"
+
+        android:paddingBottom="10dp"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp"
+        android:paddingTop="10dp"
+        android:shadowColor="#A8A8A8"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="5"
+        android:text="done"
+        android:textAllCaps="true"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:onClick="saveDeviceID"/>
+
+
+
+</RelativeLayout>

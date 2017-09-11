@@ -1,5 +1,8 @@
-WIFI_SSID = "netmatch-guest"
-WIFI_PASS = "nmt2013gu3st"
+--WIFI_SSID = "netmatch-guest"
+--WIFI_PASS = "nmt2013gu3st"
+
+WIFI_SSID = "Lord Of The Pings"
+WIFI_PASS = "my precious router"
 
 MQTT_SERVER = "m20.cloudmqtt.com"
 MQTT_PORT = 16691

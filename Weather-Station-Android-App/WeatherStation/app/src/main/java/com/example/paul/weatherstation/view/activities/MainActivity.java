@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.LinearLayout;
 
 import com.example.paul.weatherstation.R;
 import com.example.paul.weatherstation.view.customViews.SlidingTabLayout;
@@ -62,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         tabs.setViewPager(pager);
 
         if(!isOnline()){
-            Intent intent = new Intent(this, NoInternetConnection.class);
+            Intent intent = new Intent(this, NoInternetConnectionActivity.class);
             startActivity(intent);
         }
 
