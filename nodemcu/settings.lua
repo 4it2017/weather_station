@@ -1,5 +1,4 @@
---WIFI_SSID = "netmatch-guest"
---WIFI_PASS = "nmt2013gu3st"
+
 
 WIFI_SSID = "Lord Of The Pings"
 WIFI_PASS = "my precious router"
